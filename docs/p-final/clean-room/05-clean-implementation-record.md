@@ -175,3 +175,18 @@ No migration was added. Every table, column, enum value and index the five packa
 unique `(campaign_id, contact_id)`, the unique partial `source_id` and `(campaign_id, status)` indexes), and
 `messages.source_id`/`.status`/`.external_error`. `audits.city`, `.country` and `.country_code` remain unwritten
 and unread.
+
+## Retained clean tests that still fail, and why
+
+Four examples fail on the finished tree. Each was verified against a git worktree checked out at the sanitized
+snapshot commit — the tree as it arrived, before any of this work — with its own database, so "pre-existing"
+below means reproduced there, not inferred.
+
+| Example | Verified | Why it is not one of the five packages |
+| --- | --- | --- |
+| `spec/services/commerce/store_connection_spec.rb:143` | Fails identically on the snapshot. | P11's `BillingPlan` refuses to narrow a plan that an account is billed on, while this clean Commerce spec narrows one. A disagreement between two retained clean components, neither of them in A–E. |
+| `spec/services/whatsapp/incoming_message_whatsapp_cloud_service_interactive_reply_spec.rb:19` | Fails identically on the snapshot. | The inbound capture of `content_attributes['interactive_reply']` is absent from the sanitized tree. `specs/E` §9 excludes inbound message handling of any kind. |
+| `spec/services/flows/nodes/choice_spec.rb:89` | All five examples in the file fail on the snapshot, inside `Flows::Audit.record`. Package B's capture surface fixed four of them; this one then fails further on, in `app/services/whatsapp/providers/whatsapp_cloud_service.rb`, which is byte-identical to the snapshot. | Flow Builder's outbound WhatsApp **list** payload: the clean Flows code sets `interactive_type: 'list'` and `list_button`, and upstream's `create_payload_based_on_items` does not translate them into `action.sections[].rows`. An outbound payload shape, not delivery or status propagation; no clean specification describes it. |
+| `spec/models/conversation_spec.rb:1144` | Flaky on both trees: 2 failures in 5 runs here, and it fails on the snapshot with the identical value. | A wall-clock assertion with a one-second tolerance (`expect(...).to be_within(1.second).of(1.hour)`) that measures `3602.0` on a loaded container. Load-dependent, and unrelated to A–E. |
+
+None was repaired by reconstructing removed code from its retained test, which the brief forbids.
