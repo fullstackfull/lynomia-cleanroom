@@ -1,0 +1,24 @@
+tags:
+  - Conversations
+operationId: conversationUpdateLastSeen
+summary: Update Last Seen
+security:
+  - userApiKey: []
+description: |
+  Marks the conversation as seen up to now for the calling agent, which is what clears the unread
+  indicator on it in the agent's inbox.
+responses:
+  '200':
+    description: Success
+  '403':
+    description: Access denied
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/bad_request_error'
+  '404':
+    description: Conversation not found
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/bad_request_error'

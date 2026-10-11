@@ -1,0 +1,243 @@
+class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
+  include Sift
+  include ContactImportParams
+  include ContactLabelParams
+  sort_on :email, type: :string
+  sort_on :name, internal_name: :order_on_name, type: :scope, scope_params: [:direction]
+  sort_on :phone_number, type: :string
+  sort_on :last_activity_at, internal_name: :order_on_last_activity_at, type: :scope, scope_params: [:direction]
+  sort_on :created_at, internal_name: :order_on_created_at, type: :scope, scope_params: [:direction]
+  sort_on :company_name, internal_name: :order_on_company_name, type: :scope, scope_params: [:direction]
+  sort_on :city, internal_name: :order_on_city, type: :scope, scope_params: [:direction]
+  sort_on :country, internal_name: :order_on_country_name, type: :scope, scope_params: [:direction]
+
+  RESULTS_PER_PAGE = 15
+
+  before_action :check_authorization
+  before_action :set_current_page, only: [:index, :active, :search, :filter]
+  before_action :fetch_contact, only: [:show, :update, :destroy, :avatar, :contactable_inboxes, :destroy_custom_attributes]
+  before_action :set_include_contact_inboxes, only: [:index, :active, :search, :filter, :show, :update]
+
+  def index
+    @contacts = fetch_contacts(contacts_in_view)
+    @contacts_count = @contacts.total_count
+  end
+
+  def search
+    render json: { error: 'Specify search string with parameter q' }, status: :unprocessable_entity if params[:q].blank? && return
+
+    @contacts = fetch_contacts_with_has_more(contacts_in_view)
+  end
+
+  def import
+    attachment = import_attachment
+    return render_import_blank if attachment.blank?
+
+    create_contact_import(attachment)
+    head :ok
+  end
+
+  # What `import` would do with the same payload, without doing any of it.
+  def import_preview
+    content = import_csv_content
+    return render_import_blank if content.blank?
+
+    render json: contact_import_preview(content)
+  end
+
+  def export
+    column_names = params['column_names']
+    permitted = params.permit!
+    # The whole view, not only its filters: the export job resolves it with `Contacts::ViewScope`, and dropping
+    # `q` and `active` here is what made exporting from a search export the whole account.
+    filter_params = permitted.slice('payload', 'label', 'q', 'active').to_h.symbolize_keys
+    Account::ContactsExportJob.perform_later(Current.account.id, Current.user.id, column_names, filter_params)
+    head :ok, message: I18n.t('errors.contacts.export.success')
+  end
+
+  # returns online contacts
+  def active
+    @contacts = fetch_contacts(contacts_in_view(active: true))
+    @contacts_count = @contacts.total_count
+  end
+
+  def show; end
+
+  def filter
+    result = ::Contacts::FilterService.new(Current.account, Current.user, params.permit!).perform
+    contacts = result[:contacts]
+    @contacts_count = result[:count]
+    @contacts = fetch_contacts(contacts)
+  rescue CustomExceptions::CustomFilter::InvalidAttribute,
+         CustomExceptions::CustomFilter::InvalidOperator,
+         CustomExceptions::CustomFilter::InvalidQueryOperator,
+         CustomExceptions::CustomFilter::InvalidValue => e
+    render_could_not_create_error(e.message)
+  end
+
+  def contactable_inboxes
+    @all_contactable_inboxes = Contacts::ContactableInboxesService.new(contact: @contact).get
+    @contactable_inboxes = @all_contactable_inboxes.select { |contactable_inbox| policy(contactable_inbox[:inbox]).show? }
+  end
+
+  # TODO : refactor this method into dedicated contacts/custom_attributes controller class and routes
+  def destroy_custom_attributes
+    @contact.custom_attributes = @contact.custom_attributes.excluding(params[:custom_attributes])
+    @contact.save!
+  end
+
+  def create
+    ActiveRecord::Base.transaction do
+      @contact = Current.account.contacts.new(permitted_params.except(:avatar_url))
+      # Assigned before the insert, not written with a second `update!` afterwards: `label_list=` is the same
+      # acts-as-taggable-on writer `Labelable#update_labels` uses, and the gem persists the taggings from its
+      # own `after_save`, so one save covers both and the contact is never briefly label-less.
+      @contact.label_list = requested_label_titles(@contact)
+      @contact.save!
+      @contact_inbox = build_contact_inbox
+      process_avatar_from_url
+    end
+  rescue ActiveRecord::RecordNotUnique => e
+    reject_duplicate_contact(e)
+  end
+
+  def update
+    @contact.assign_attributes(contact_update_params)
+    @contact.save!
+    process_avatar_from_url
+  rescue ActiveRecord::RecordNotUnique => e
+    reject_duplicate_contact(e)
+  end
+
+  def destroy
+    if ::OnlineStatusTracker.get_presence(
+      @contact.account.id, 'Contact', @contact.id
+    )
+      return render_error({ message: I18n.t('contacts.online.delete', contact_name: @contact.name.capitalize) },
+                          :unprocessable_entity)
+    end
+
+    @contact.destroy!
+    head :ok
+  end
+
+  def avatar
+    @contact.avatar.purge if @contact.avatar.attached?
+    @contact
+  end
+
+  private
+
+  # Two requests writing the same contact at once both pass the `uniqueness` validations — a validation runs a
+  # SELECT, and the other row does not exist yet — and the database then refuses the loser. That has always been
+  # so for `(email, account_id)` and `(identifier, account_id)`, which have been UNIQUE since Chatwoot's first
+  # schema, and is now so for `(phone_number, account_id)` (docs/contacts/11-phone-uniqueness.md).
+  #
+  # Revalidating answers with the same 422 the loser would have got a moment later, because the winning row is
+  # visible now. If it does not, the refusal is not the one described here, and saying so is better than
+  # inventing a message for it.
+  def reject_duplicate_contact(error)
+    @contact.validate
+    raise error if @contact.errors.empty?
+
+    raise ActiveRecord::RecordInvalid, @contact
+  end
+
+  # TODO: Move this to a finder class
+  # The view this request describes. A bulk action over every result in a view, and the CSV export, ask
+  # `Contacts::ViewScope` the same question with the same description, so none of the three can drift from
+  # the others (docs/contacts/10-phase-d.md §D4).
+  def contacts_in_view(description = params.permit(:q, :active, :label, labels: []))
+    ::Contacts::ViewScope.new(account: Current.account, user: Current.user, params: description.to_h).perform
+  end
+
+  def set_current_page
+    @current_page = params[:page] || 1
+  end
+
+  def fetch_contacts(contacts)
+    # Build includes hash to avoid separate query when contact_inboxes are needed
+    includes_hash = { avatar_attachment: [:blob] }
+    includes_hash[:contact_inboxes] = { inbox: :channel } if @include_contact_inboxes
+
+    filtrate(contacts)
+      .includes(includes_hash)
+      .page(@current_page)
+      .per(RESULTS_PER_PAGE)
+  end
+
+  def fetch_contacts_with_has_more(contacts)
+    includes_hash = { avatar_attachment: [:blob] }
+    includes_hash[:contact_inboxes] = { inbox: :channel } if @include_contact_inboxes
+
+    # Calculate offset manually to fetch one extra record for has_more check
+    offset = (@current_page.to_i - 1) * RESULTS_PER_PAGE
+    results = filtrate(contacts)
+              .includes(includes_hash)
+              .offset(offset)
+              .limit(RESULTS_PER_PAGE + 1)
+              .to_a
+
+    @has_more = results.size > RESULTS_PER_PAGE
+    results = results.first(RESULTS_PER_PAGE) if @has_more
+    @contacts_count = results.size
+    results
+  end
+
+  def build_contact_inbox
+    return if params[:inbox_id].blank?
+
+    inbox = Current.account.inboxes.find(params[:inbox_id])
+    ContactInboxBuilder.new(
+      contact: @contact,
+      inbox: inbox,
+      source_id: params[:source_id]
+    ).perform
+  end
+
+  def permitted_params
+    params.permit(:name, :identifier, :email, :phone_number, :avatar, :blocked, :avatar_url, additional_attributes: {}, custom_attributes: {})
+  end
+
+  def contact_custom_attributes
+    return @contact.custom_attributes.merge(permitted_params[:custom_attributes]) if permitted_params[:custom_attributes]
+
+    @contact.custom_attributes
+  end
+
+  def contact_additional_attributes
+    return @contact.additional_attributes.merge(permitted_params[:additional_attributes]) if permitted_params[:additional_attributes]
+
+    @contact.additional_attributes
+  end
+
+  def contact_update_params
+    permitted_params.except(:custom_attributes, :avatar_url)
+                    .merge({ custom_attributes: contact_custom_attributes })
+                    .merge({ additional_attributes: contact_additional_attributes })
+  end
+
+  def set_include_contact_inboxes
+    @include_contact_inboxes = if params[:include_contact_inboxes].present?
+                                 params[:include_contact_inboxes] == 'true'
+                               else
+                                 true
+                               end
+  end
+
+  def fetch_contact
+    contact_scope = Current.account.contacts
+    contact_scope = contact_scope.includes(contact_inboxes: [:inbox]) if @include_contact_inboxes
+    @contact = contact_scope.find(params[:id])
+  end
+
+  def process_avatar_from_url
+    ::Avatar::AvatarFromUrlJob.perform_later(@contact, params[:avatar_url]) if params[:avatar_url].present?
+  end
+
+  def render_error(error, error_status)
+    render json: error, status: error_status
+  end
+end
+
+Api::V1::Accounts::ContactsController.prepend_mod_with('Api::V1::Accounts::ContactsController')

@@ -1,0 +1,32 @@
+tags:
+  - Custom Filters
+operationId: list-all-filters
+summary: List all custom filters
+description: |
+  Lists the caller's own saved filters of one kind, plus the account's shared audiences of that kind.
+security:
+  - userApiKey: []
+parameters:
+  - in: query
+    name: filter_type
+    schema:
+      type: string
+      enum: ['conversation', 'contact', 'report']
+      default: conversation
+    description: Which kind to list. Defaults to conversation.
+responses:
+  '200':
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: array
+          description: 'Array of custom filters'
+          items:
+            $ref: '#/components/schemas/custom_filter'
+  '401':
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/bad_request_error'

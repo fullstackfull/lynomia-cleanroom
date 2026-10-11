@@ -1,0 +1,25 @@
+{% assign brand_name = global_config['BRAND_NAME'] | default: 'Chatwoot' %}
+<p>Hello there,</p>
+
+<p>We've noticed that your {{ brand_name }} account <strong>{{ meta.account_name }}</strong> has been inactive for some time. Because of this, it's scheduled for deletion on <strong>{{ meta.deletion_date }}</strong>.</p>
+
+<p><strong>How do I keep my account?</strong></p>
+
+<p>Log in to your {{ brand_name }} account before <strong>{{ meta.deletion_date }}</strong>. From your account settings, you can <a href="{{ action_url }}">cancel the deletion</a> and continue using your account.</p>
+
+<p><strong>What happens if I don't cancel?</strong></p>
+
+<p>Unless you cancel the account deletion before <strong>{{ meta.deletion_date }}</strong>, your account and all associated data — including conversations, contacts, reports, and settings — will be permanently deleted.</p>
+
+<p><strong>Why are we doing this?</strong></p>
+
+<p>To keep things secure and efficient, we regularly remove inactive accounts so our systems remain optimized for active teams.</p>
+
+{% assign support_url = global_config["SUPPORT_URL"] | strip %}
+{% if support_url != "" %}
+<p>If you have any questions, you can <a href="{{ support_url }}">get in touch with us</a>.</p>
+{% endif %}
+
+<p>— The {{ brand_name }} Team</p>
+
+

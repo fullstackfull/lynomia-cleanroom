@@ -1,0 +1,912 @@
+{
+  "CONTACT_PANEL": {
+    "NOT_AVAILABLE": "غير متاح",
+    "EMAIL_ADDRESS": "عنوان البريد الإلكتروني",
+    "PHONE_NUMBER": "رقم الهاتف",
+    "WHATSAPP_USERNAME": "WhatsApp username",
+    "IDENTIFIER": "المعرف",
+    "COPY_SUCCESSFUL": "تم النسخ إلى الحافظة بنجاح",
+    "COMPANY": "المنشأة",
+    "LOCATION": "الموقع الجغرافي",
+    "BROWSER_LANGUAGE": "لغة المتصفح",
+    "CONVERSATION_TITLE": "تفاصيل المحادثة",
+    "VIEW_PROFILE": "عرض الملف الشخصي",
+    "BROWSER": "المتصفح",
+    "OS": "نظام التشغيل",
+    "INITIATED_FROM": "تم البدء من",
+    "INITIATED_AT": "تم البدء في",
+    "IP_ADDRESS": "عنوان IP",
+    "CREATED_AT_LABEL": "تم إنشاؤها",
+    "NEW_MESSAGE": "رسالة جديدة",
+    "CALL": "Call",
+    "CALL_INITIATED": "جار الاتصال بجهة الاتصال…",
+    "CALL_FAILED": "تعذر بدء المكالمة. الرجاء المحاولة مرة أخرى.",
+    "WHATSAPP_CALL_PERMISSION_REQUESTED": "Sent a call permission request to the contact. Try again once they accept.",
+    "WHATSAPP_CALL_PERMISSION_PENDING": "Call permission request already sent recently. Try again once the contact accepts.",
+    "CLICK_TO_EDIT": "Click to edit",
+    "VOICE_INBOX_PICKER": {
+      "TITLE": "Choose a voice inbox"
+    },
+    "CONVERSATIONS": {
+      "NO_RECORDS_FOUND": "لا توجد محادثات سابقة مرتبطة بجهة الاتصال هذه.",
+      "TITLE": "المحادثات السابقة",
+      "VIEW_ALL": "عرض كل المحادثات"
+    },
+    "LABELS": {
+      "CONTACT": {
+        "TITLE": "تصنفيات جهات الاتصال",
+        "ERROR": "تعذر تحديث التصنيفات"
+      },
+      "CONVERSATION": {
+        "TITLE": "وسوم المحادثة",
+        "ADD_BUTTON": "اضافة تصنيف جديد"
+      },
+      "LABEL_SELECT": {
+        "TITLE": "اضافة تصنيف جديد",
+        "PLACEHOLDER": "ابحث عن تصنيفات",
+        "NO_RESULT": "لم يتم العثور على تصنيفات",
+        "CREATE_LABEL": "إنشاء تسمية جديدة"
+      }
+    },
+    "MERGE_CONTACT": "دمج جهة الاتصال",
+    "CONTACT_ACTIONS": "إجراءات جهات الاتصال",
+    "MUTE_CONTACT": "احجب جهة الاتصال",
+    "UNMUTE_CONTACT": "إلغاء حجب جهة الاتصال",
+    "MUTED_SUCCESS": "تم حظر جهة الاتصال هذه بنجاح، لن يتم إعلامك بأي محادثات في المستقبل.",
+    "UNMUTED_SUCCESS": "تم إلغاء حجب جهة الاتصال بنجاح.",
+    "SEND_TRANSCRIPT": "إرسال النص",
+    "EDIT_LABEL": "تعديل",
+    "SIDEBAR_SECTIONS": {
+      "CUSTOM_ATTRIBUTES": "سمات مخصصة",
+      "CONTACT_LABELS": "تصنفيات جهات الاتصال",
+      "PREVIOUS_CONVERSATIONS": "المحادثات السابقة",
+      "NO_RECORDS_FOUND": "لم يتم العثور على سمات"
+    },
+    "COPY_FIELD": "نسخ {field}",
+    "EDIT_FIELD": "تعديل {field}"
+  },
+  "EDIT_CONTACT": {
+    "BUTTON_LABEL": "تعديل جهة الاتصال",
+    "TITLE": "تعديل جهة الاتصال",
+    "DESC": "تعديل تفاصيل جهة الاتصال"
+  },
+  "DELETE_CONTACT": {
+    "BUTTON_LABEL": "حذف جهة الاتصال",
+    "TITLE": "حذف جهة الاتصال",
+    "DESC": "حذف تفاصيل جهة الاتصال",
+    "CONFIRM": {
+      "TITLE": "تأكيد الحذف",
+      "MESSAGE": "هل أنت متأكد من الحذف ",
+      "YES": "نعم، احذف",
+      "NO": "لا، احتفظ"
+    },
+    "API": {
+      "SUCCESS_MESSAGE": "تم حذف جهة الاتصال بنجاح",
+      "ERROR_MESSAGE": "تعذر حذف جهة الاتصال. يرجى المحاولة مرة أخرى لاحقاً."
+    }
+  },
+  "CONTACT_FORM": {
+    "FORM": {
+      "SUBMIT": "إرسال",
+      "CANCEL": "إلغاء",
+      "AVATAR": {
+        "LABEL": "صورة الرمزية"
+      },
+      "NAME": {
+        "PLACEHOLDER": "أدخل الاسم الكامل لجهة الاتصال",
+        "LABEL": "الاسم الكامل"
+      },
+      "BIO": {
+        "PLACEHOLDER": "أدخل البيانات الشخصية لجهة الاتصال",
+        "LABEL": "البيانات الشخصية"
+      },
+      "EMAIL_ADDRESS": {
+        "PLACEHOLDER": "أدخل عنوان البريد الإلكتروني الخاص بجهة الاتصال",
+        "LABEL": "عنوان البريد الإلكتروني",
+        "DUPLICATE": "عنوان البريد الإلكتروني هذا مستخدم من قبل جهة اتصال أخرى.",
+        "ERROR": "الرجاء إدخال عنوان بريد إلكتروني صحيح."
+      },
+      "PHONE_NUMBER": {
+        "PLACEHOLDER": "أدخل رقم الهاتف الخاص بجهة الاتصال",
+        "LABEL": "رقم الهاتف",
+        "HELP": "يجب ان يحتوى رقم الهاتف على كود الدولة تسبقها علامة +\nمثال: +20101243567.",
+        "ERROR": "يجب ان تكون خانة رقم الهاتف إما فارغة او مكتملة مع رمز الدولة",
+        "DIAL_CODE_ERROR": "الرجاء تحديد رمز الاتصال من القائمة",
+        "DUPLICATE": "رقم الهاتف هذا مستخدم لجهة اتصال أخرى."
+      },
+      "LOCATION": {
+        "PLACEHOLDER": "أدخل الموقع الجغرافي لجهة الاتصال",
+        "LABEL": "الموقع الجغرافي"
+      },
+      "COMPANY_NAME": {
+        "PLACEHOLDER": "أدخل اسم الشركة",
+        "LABEL": "اسم الشركة"
+      },
+      "COUNTRY": {
+        "PLACEHOLDER": "إدخال اسم الدولة",
+        "LABEL": "اسم الدولة",
+        "SELECT_PLACEHOLDER": "اختر",
+        "REMOVE": "حذف",
+        "SELECT_COUNTRY": "أختر الدولة"
+      },
+      "CITY": {
+        "PLACEHOLDER": "إدخال اسم المدينة",
+        "LABEL": "اسم المدينة"
+      },
+      "SOCIAL_PROFILES": {
+        "FACEBOOK": {
+          "PLACEHOLDER": "أدخل اسم مستخدم فيسبوك",
+          "LABEL": "فيسبوك"
+        },
+        "TWITTER": {
+          "PLACEHOLDER": "أدخل اسم مستخدم تويتر",
+          "LABEL": "تويتر"
+        },
+        "LINKEDIN": {
+          "PLACEHOLDER": "أدخل اسم مستخدم Linkedin",
+          "LABEL": "LinkedIn"
+        },
+        "GITHUB": {
+          "PLACEHOLDER": "أدخل اسم المستخدم في Github",
+          "LABEL": "Github"
+        }
+      }
+    },
+    "DELETE_AVATAR": {
+      "API": {
+        "SUCCESS_MESSAGE": "تم حذف الصورة الرمزية لجهة الاتصال بنجاح",
+        "ERROR_MESSAGE": "تعذر حذف الصورة الرمزية لجهة الإتصال. الرجاء المحاولة مرة أخرى لاحقاً."
+      }
+    },
+    "SUCCESS_MESSAGE": "تم حفظ جهة الاتصال بنجاح",
+    "ERROR_MESSAGE": "حدث خطأ، الرجاء المحاولة مرة أخرى"
+  },
+  "NEW_CONVERSATION": {
+    "BUTTON_LABEL": "إبدأ محادثة",
+    "TITLE": "محادثة جديدة",
+    "DESC": "بدء محادثة جديدة بإرسال رسالة جديدة.",
+    "NO_INBOX": "تعذر العثور على صندوق الوارد لبدء محادثة جديدة مع جهة الاتصال هذه.",
+    "FORM": {
+      "TO": {
+        "LABEL": "إلى"
+      },
+      "INBOX": {
+        "LABEL": "صندوق الوارد",
+        "PLACEHOLDER": "اختيار مصدر البريد الوارد",
+        "ERROR": "حدد صندوق الوارد"
+      },
+      "SUBJECT": {
+        "LABEL": "الموضوع",
+        "PLACEHOLDER": "الموضوع",
+        "ERROR": "الموضوع لا يمكن أن يكون فارغاً"
+      },
+      "MESSAGE": {
+        "LABEL": "رسالة",
+        "PLACEHOLDER": "اكتب رسالتك هنا",
+        "ERROR": "لا يمكن أن تكون الرسالة فارغة"
+      },
+      "ATTACHMENTS": {
+        "SELECT": "اختر الملفات",
+        "HELP_TEXT": "قم بسحب وإسقاط الملفات هنا أو اختر ملفات لإرفاقها"
+      },
+      "SUBMIT": "إرسال الرسالة",
+      "CANCEL": "إلغاء",
+      "SUCCESS_MESSAGE": "تم إرسال الرسالة!",
+      "GO_TO_CONVERSATION": "عرض",
+      "ERROR_MESSAGE": "تعذر الإرسال! حاول مرة أخرى"
+    }
+  },
+  "CONTACTS_PAGE": {
+    "LIST": {
+      "TABLE_HEADER": {
+        "SOCIAL_PROFILES": "حسابات التواصل الاجتماعي"
+      }
+    }
+  },
+  "CUSTOM_ATTRIBUTES": {
+    "BUTTON": "إضافة سمة خاصة",
+    "COPY_SUCCESSFUL": "تم النسخ إلى الحافظة بنجاح",
+    "SHOW_MORE": "إظهار كافة السمات",
+    "SHOW_LESS": "عرض سمات أقل",
+    "ACTIONS": {
+      "COPY": "نسخ السمة",
+      "DELETE": "حذف السمة",
+      "EDIT": "تعديل السمة"
+    },
+    "ADD": {
+      "TITLE": "إنشاء سمة خاصة",
+      "DESC": "أضف معلومات مخصصة إلى جهة الاتصال هذه."
+    },
+    "FORM": {
+      "CREATE": "أضف سمة",
+      "CANCEL": "إلغاء",
+      "NAME": {
+        "LABEL": "اسم الصفة الخاصة",
+        "PLACEHOLDER": "مثال: shopify id",
+        "ERROR": "اسم الصفة المخصصة غير صالح"
+      },
+      "VALUE": {
+        "LABEL": "قيمة السمة",
+        "PLACEHOLDER": "مثلاً: 11901 "
+      },
+      "ADD": {
+        "TITLE": "إنشاء صفة جديدة ",
+        "SUCCESS": "تمت إضافة الصفة بنجاح",
+        "ERROR": "غير قادر على إضافة الصفة. الرجاء المحاولة مرة أخرى لاحقاً"
+      },
+      "UPDATE": {
+        "SUCCESS": "تم تحديث الصفة المخصصة بنجاح",
+        "ERROR": "غير قادر على تحديث الصفة. الرجاء المحاولة مرة أخرى لاحقاً"
+      },
+      "DELETE": {
+        "SUCCESS": "تم حذف الصفة المخصصة بنجاح",
+        "ERROR": "غير قادر على حذف الصفة. الرجاء المحاولة مرة أخرى لاحقاً"
+      },
+      "ATTRIBUTE_SELECT": {
+        "TITLE": "أضف صفة",
+        "PLACEHOLDER": "البحث عن صفات",
+        "NO_RESULT": "لم يتم العثور على سمات"
+      },
+      "ATTRIBUTE_TYPE": {
+        "LIST": {
+          "PLACEHOLDER": "اختر قيمة",
+          "SEARCH_INPUT_PLACEHOLDER": "البحث عن قيمة",
+          "NO_RESULT": "لم يتم العثور على النتائج"
+        }
+      }
+    },
+    "VALIDATIONS": {
+      "REQUIRED": "القيمة الصالحة مطلوبة",
+      "INVALID_URL": "عنوان الرابط غير صالح",
+      "INVALID_INPUT": "مدخلات غير صالح"
+    }
+  },
+  "MERGE_CONTACTS": {
+    "TITLE": "دمج جهة الاتصال",
+    "DESCRIPTION": "دمج جهات الاتصال للجمع بين ملفّين شخصيين في واحد، بما في ذلك جميع السمات والمحادثات. في حالة التعارض، تكون لخصائص جهة الاتصال الرئيسية الأسبقية.",
+    "PRIMARY": {
+      "TITLE": "جهة الاتصال الرئيسية",
+      "HELP_LABEL": "ليتم حذفها"
+    },
+    "PARENT": {
+      "TITLE": "دمج جهة الإتصال",
+      "PLACEHOLDER": "بحث عن جهات الاتصال",
+      "HELP_LABEL": "سيتم الاحتفاظ بها"
+    },
+    "SUMMARY": {
+      "TITLE": "ملخص",
+      "DELETE_WARNING": "سيتم حذف جهة الاتصال <strong>{primaryContactName}</strong>.",
+      "ATTRIBUTE_WARNING": "سيتم نسخ تفاصيل الاتصال من <strong>{primaryContactName}</strong> إلى <strong>{parentContactName}</strong>.",
+      "IRREVERSIBLE": "لا يمكن التراجع عن هذا الإجراء. يُسجَّل الدمج في سجل التدقيق.",
+      "CARRIED_OVER": "تنتقل المحادثات والرسائل والملاحظات والوسوم وسجل الحملات وحالات الدعم وروابط المتجر إلى جهة الاتصال التي يتم الاحتفاظ بها."
+    },
+    "SEARCH": {
+      "ERROR_MESSAGE": "Something went wrong. Please try again later."
+    },
+    "FORM": {
+      "SUBMIT": " دمج جهات الاتصال",
+      "CANCEL": "إلغاء",
+      "CHILD_CONTACT": {
+        "ERROR": "حدد جهة اتصال فرعية للدمج"
+      },
+      "SUCCESS_MESSAGE": "تم دمج جهة الاتصال بنجاح",
+      "ERROR_MESSAGE": "تعذر دمج جهات الاتصال ، حاول مرة أخرى!"
+    },
+    "DROPDOWN_ITEM": {
+      "ID": "(ID: {identifier})"
+    }
+  },
+  "CONTACTS_LAYOUT": {
+    "HEADER": {
+      "TITLE": "جهات الاتصال",
+      "SEARCH_TITLE": "Search contacts",
+      "ACTIVE_TITLE": "Active contacts",
+      "SEARCH_PLACEHOLDER": "Search...",
+      "MESSAGE_BUTTON": "رسالة",
+      "SEND_MESSAGE": "إرسال الرسالة",
+      "BLOCK_CONTACT": "Block contact",
+      "UNBLOCK_CONTACT": "Unblock contact",
+      "BREADCRUMB": {
+        "CONTACTS": "جهات الاتصال"
+      },
+      "ACTIONS": {
+        "CONTACT_CREATION": {
+          "ADD_CONTACT": "Add contact",
+          "EXPORT_CONTACT": "Export contacts",
+          "IMPORT_CONTACT": "Import contacts",
+          "SAVE_CONTACT": "Save contact",
+          "EMAIL_ADDRESS_DUPLICATE": "عنوان البريد الإلكتروني هذا مستخدم من قبل جهة اتصال أخرى.",
+          "PHONE_NUMBER_DUPLICATE": "رقم الهاتف هذا مستخدم لجهة اتصال أخرى.",
+          "SUCCESS_MESSAGE": "تم حفظ جهة الاتصال بنجاح",
+          "ERROR_MESSAGE": "Unable to save contact. Please try again later."
+        },
+        "BLOCK_SUCCESS_MESSAGE": "This contact is blocked successfully",
+        "BLOCK_ERROR_MESSAGE": "Unable to block contact. Please try again later.",
+        "UNBLOCK_SUCCESS_MESSAGE": "تم إلغاء حجب جهة الاتصال بنجاح",
+        "UNBLOCK_ERROR_MESSAGE": "Unable to unblock contact. Please try again later.",
+        "IMPORT_CONTACT": {
+          "TITLE": "Import contacts",
+          "DESCRIPTION": "استورد جهات الاتصال من ملف CSV، أو الصق قائمة أرقام هواتف.",
+          "DOWNLOAD_LABEL": "تحميل عينة csv.",
+          "LABEL": "ملف CSV:",
+          "CHOOSE_FILE": "Choose file",
+          "CHANGE": "يتغيرون",
+          "CANCEL": "إلغاء",
+          "IMPORT": "استيراد",
+          "SUCCESS_MESSAGE": "سيتم إعلامك عبر البريد الإلكتروني عند استكمال الاستيراد.",
+          "ERROR_MESSAGE": "حدث خطأ، الرجاء المحاولة مرة أخرى",
+          "SOURCES": {
+            "FILE": "ملف CSV",
+            "PASTE": "لصق أرقام"
+          },
+          "PASTE_LABEL": "أرقام الهواتف",
+          "PASTE_PLACEHOLDER": "+96551112233\n00966551112233\n+971501234567",
+          "PASTE_HINT": "رقم في كل سطر، أو مفصولة بفواصل. المسافات داخل الرقم مقبولة.",
+          "LABELS_LABEL": "تصنيفات لكل جهة اتصال في هذا الاستيراد",
+          "LABELS_PLACEHOLDER": "اختر التصنيفات",
+          "NO_LABELS": "لا توجد تصنيفات في هذا الحساب بعد",
+          "COUNTRY_LABEL": "بلد الأرقام المحلية",
+          "COUNTRY_HINT": "يُستخدم فقط للصفوف التي لا تذكر بلدها، وفقط للأرقام المكتوبة بدون رمز بلد.",
+          "COUNTRY_PLACEHOLDER": "لم يتم اختيار بلد",
+          "DUPLICATES_LABEL": "جهات الاتصال الموجودة في هذا الحساب",
+          "DUPLICATES_HINT": "تُضاف التصنيفات في الحالتين، ولا تستبدل أبداً تصنيفات جهة الاتصال الحالية.",
+          "DUPLICATES": {
+            "UPDATE": "تحديث بياناتها",
+            "KEEP": "الإبقاء على بياناتها"
+          },
+          "CONTINUE": "متابعة",
+          "BACK": "رجوع",
+          "COUNTS": {
+            "NEW_CONTACT": "جهات اتصال جديدة",
+            "UPDATE_EXISTING": "ستُحدَّث",
+            "SKIP_EXISTING": "ستبقى كما هي",
+            "DUPLICATE_IN_FILE": "صفوف مكررة",
+            "NO_IDENTITY": "لا سبيل للوصول إليها",
+            "INVALID": "ستُتجاهل"
+          },
+          "FULL_PREVIEW": "تم فحص كل الصفوف ({total}).",
+          "PARTIAL_PREVIEW": "تم فحص أول {previewed} من {total} صف. وستُستورد البقية بالطريقة نفسها.",
+          "CHOICES": "ستُقرأ الأرقام المحلية على أنها {country}. التصنيفات: {labels}.",
+          "NO_COUNTRY": "بدون بلد",
+          "NO_LABELS_CHOSEN": "لا شيء",
+          "ROW": "الصف",
+          "ROW_CONTACT": "جهة الاتصال",
+          "ROW_REASON": "ما سيحدث",
+          "REASONS": {
+            "UNKNOWN_LABELS": "تم تجاهله: تصنيفات غير موجودة في هذا الحساب ({detail})",
+            "PHONE_COUNTRY_REQUIRED": "تم تجاهله: الرقم المحلي يحتاج إلى بلد",
+            "PHONE_INVALID": "تم تجاهله: ليس رقم هاتف يمكن تخزينه",
+            "MISSING_IDENTITY": "سيتم إنشاؤها، لكن بدون إيميل أو هاتف أو معرّف لن تظهر في قائمة جهات الاتصال",
+            "DUPLICATE_IN_FILE": "نفس جهة الاتصال في الصف {detail}؛ وتُضاف تصنيفاته إليها",
+            "EXISTING_CONTACT": "موجودة في هذا الحساب",
+            "INVALID_RECORD": "تم تجاهله: {detail}"
+          },
+          "ERRORS": {
+            "NOT_A_CSV": "اختر ملف .csv.",
+            "PREVIEW_FAILED": "لم نتمكن من فحص الملف. يرجى المحاولة مرة أخرى."
+          },
+          "LABELS_HINT": "التصنيف تصنيفٌ دائم تحتفظ به: VIP، جملة، يحتاج متابعة. أما العضوية التي تُحسب تلقائياً — المشترون حديثاً، الطلبات المفتوحة — فمكانها الجمهور."
+        },
+        "EXPORT_CONTACT": {
+          "TITLE": "Export contacts",
+          "DESCRIPTION": "Quickly export a csv file with comprehensive details of your contacts",
+          "CONFIRM": "تصدير",
+          "SUCCESS_MESSAGE": "التصدير جاري. سيتم إعلامك على البريد الإلكتروني عندما يكون ملف التصدير جاهزا للتحميل.",
+          "ERROR_MESSAGE": "حدث خطأ، الرجاء المحاولة مرة أخرى"
+        },
+        "SORT_BY": {
+          "LABEL": "ترتيب حسب",
+          "OPTIONS": {
+            "NAME": "الاسم",
+            "EMAIL": "البريد الإلكتروني",
+            "PHONE_NUMBER": "رقم الهاتف",
+            "COMPANY": "المنشأة",
+            "COUNTRY": "الدولة",
+            "CITY": "المدينة",
+            "LAST_ACTIVITY": "آخر نشاط",
+            "CREATED_AT": "تم إنشاؤها في"
+          }
+        },
+        "ORDER": {
+          "LABEL": "Ordering",
+          "OPTIONS": {
+            "ASCENDING": "Ascending",
+            "DESCENDING": "Descending"
+          }
+        },
+        "FILTERS": {
+          "CREATE_SEGMENT": {
+            "TITLE": "هل تريد حفظ هذه الفلاتر كجمهور؟",
+            "CONFIRM": "حفظ الجمهور",
+            "LABEL": "الاسم",
+            "PLACEHOLDER": "سمِّ هذا الجمهور",
+            "ERROR": "أدخل اسمًا صالحًا",
+            "SUCCESS_MESSAGE": "تم حفظ الجمهور",
+            "ERROR_MESSAGE": "تعذر حفظ الجمهور. حاول مرة أخرى.",
+            "SHARE": "مشاركة مع كل الحساب",
+            "SHARE_HINT": "يمكن لكل أعضاء الحساب فتح الجمهور المشترك، ويمكن لقواعد الأتمتة استخدامه. يعدّله المسؤولون فقط.",
+            "ACTION": "حفظ كجمهور"
+          },
+          "DELETE_SEGMENT": {
+            "TITLE": "هل تريد حذف هذا الجمهور؟",
+            "DESCRIPTION": "تُحذف شروطه المحفوظة فقط، وتبقى جهات الاتصال.",
+            "CONFIRM": "نعم، احذف",
+            "CANCEL": "لا، إلغاء",
+            "SUCCESS_MESSAGE": "تم حذف الجمهور",
+            "ERROR_MESSAGE": "تعذر حذف الجمهور. حاول مرة أخرى."
+          }
+        },
+        "AUDIENCE": {
+          "SECTION": "الجمهور",
+          "USED_BY": "مستخدم في {usage}",
+          "USED_BY_RULES": "{n} قاعدة أتمتة | {n} قواعد أتمتة",
+          "USED_BY_CAMPAIGNS": "{n} حملة | {n} حملات",
+          "USE_IN_AUTOMATION": "استخدمه في قاعدة أتمتة جديدة",
+          "USE_IN_CAMPAIGN": "استخدمه في حملة واتساب جديدة",
+          "DUPLICATE": "أنشئ نسخة من هذا الجمهور",
+          "DUPLICATE_TITLE": "إنشاء نسخة من هذا الجمهور؟",
+          "DUPLICATE_NAME": "نسخة من {name}",
+          "COPY_LINK": "انسخ رابط هذا الجمهور",
+          "LINK_COPIED": "تم نسخ الرابط",
+          "LINK_COPY_FAILED": "تعذّر نسخ الرابط. انسخه من شريط العنوان بدلًا من ذلك.",
+          "FROM_PRESET": "جمهور جديد من قالب جاهز"
+        },
+        "MORE": "إجراءات أخرى",
+        "BUTTONS": {
+          "DELETE_SEGMENT": "حذف الجمهور",
+          "FILTER": "تصفية جهات الاتصال"
+        }
+      }
+    },
+    "PAGINATION_FOOTER": {
+      "SHOWING": "Showing {startItem} - {endItem} of {totalItems} contacts"
+    },
+    "FILTER": {
+      "NAME": "الاسم",
+      "EMAIL": "البريد الإلكتروني",
+      "PHONE_NUMBER": "رقم الهاتف",
+      "IDENTIFIER": "المعرف",
+      "COUNTRY": "الدولة",
+      "CITY": "المدينة",
+      "COMPANY": "المنشأة",
+      "CREATED_AT": "تم إنشاؤها في",
+      "LAST_ACTIVITY": "آخر نشاط",
+      "REFERER_LINK": "رابط المرجع",
+      "BLOCKED": "محظور",
+      "BLOCKED_TRUE": "صحيح",
+      "BLOCKED_FALSE": "خاطئ",
+      "BUTTONS": {
+        "CLEAR_FILTERS": "مسح التصفيات",
+        "UPDATE_SEGMENT": "تحديث الجمهور",
+        "APPLY_FILTERS": "تطبيق التصفيات",
+        "ADD_FILTER": "إضافة تصفية"
+      },
+      "TITLE": "تصفية جهات الاتصال",
+      "EDIT_SEGMENT": "تعديل الجمهور",
+      "SEGMENT": {
+        "LABEL": "اسم الجمهور",
+        "INPUT_PLACEHOLDER": "سمِّ هذا الجمهور"
+      },
+      "ACTIVE_FILTERS": {
+        "MORE_FILTERS": "+ {count} more filters",
+        "CLEAR_FILTERS": "مسح التصفيات"
+      }
+    },
+    "CARD": {
+      "OF": "of",
+      "VIEW_DETAILS": "عرض التفاصيل",
+      "EDIT_DETAILS_FORM": {
+        "TITLE": "تعديل تفاصيل جهة الاتصال",
+        "FORM": {
+          "FIRST_NAME": {
+            "PLACEHOLDER": "Enter the first name"
+          },
+          "LAST_NAME": {
+            "PLACEHOLDER": "Enter the last name"
+          },
+          "EMAIL_ADDRESS": {
+            "PLACEHOLDER": "Enter the email address",
+            "DUPLICATE": "عنوان البريد الإلكتروني هذا مستخدم من قبل جهة اتصال أخرى."
+          },
+          "PHONE_NUMBER": {
+            "PLACEHOLDER": "Enter the phone number",
+            "DUPLICATE": "رقم الهاتف هذا مستخدم لجهة اتصال أخرى."
+          },
+          "CITY": {
+            "PLACEHOLDER": "إدخال اسم المدينة"
+          },
+          "COUNTRY": {
+            "PLACEHOLDER": "Select country"
+          },
+          "BIO": {
+            "PLACEHOLDER": "Enter the bio"
+          },
+          "COMPANY_NAME": {
+            "PLACEHOLDER": "أدخل اسم الشركة"
+          }
+        },
+        "UPDATE_BUTTON": "Update contact",
+        "SUCCESS_MESSAGE": "Contact updated successfully",
+        "ERROR_MESSAGE": "Unable to update contact. Please try again later."
+      },
+      "SOCIAL_MEDIA": {
+        "TITLE": "Edit social links",
+        "FORM": {
+          "FACEBOOK": {
+            "PLACEHOLDER": "Add Facebook"
+          },
+          "GITHUB": {
+            "PLACEHOLDER": "Add Github"
+          },
+          "INSTAGRAM": {
+            "PLACEHOLDER": "Add Instagram"
+          },
+          "WHATSAPP": {
+            "PLACEHOLDER": "Add WhatsApp"
+          },
+          "TELEGRAM": {
+            "PLACEHOLDER": "Add Telegram"
+          },
+          "TIKTOK": {
+            "PLACEHOLDER": "إضافة TikTok"
+          },
+          "LINKEDIN": {
+            "PLACEHOLDER": "Add LinkedIn"
+          },
+          "TWITTER": {
+            "PLACEHOLDER": "Add Twitter"
+          }
+        }
+      },
+      "DELETE_CONTACT": {
+        "MESSAGE": "This action is permanent and irreversible.",
+        "BUTTON": "Delete now"
+      }
+    },
+    "DETAILS": {
+      "CREATED_AT": "Created {date}",
+      "LAST_ACTIVITY": "Last active {date}",
+      "DELETE_CONTACT_DESCRIPTION": "Permanently delete this contact. This action is irreversible",
+      "DELETE_CONTACT": "حذف جهة الاتصال",
+      "DELETE_DIALOG": {
+        "TITLE": "تأكيد الحذف",
+        "DESCRIPTION": "Are you sure you want to delete this contact?",
+        "CONFIRM": "نعم، احذف",
+        "API": {
+          "SUCCESS_MESSAGE": "تم حذف جهة الاتصال بنجاح",
+          "ERROR_MESSAGE": "تعذر حذف جهة الاتصال. يرجى المحاولة مرة أخرى لاحقاً."
+        }
+      },
+      "AVATAR": {
+        "UPLOAD": {
+          "ERROR_MESSAGE": "Could not upload avatar. Please try again later.",
+          "SUCCESS_MESSAGE": "Avatar uploaded successfully"
+        },
+        "DELETE": {
+          "SUCCESS_MESSAGE": "الصورة الرمزية حذفت بنجاح",
+          "ERROR_MESSAGE": "Could not delete avatar. Please try again later."
+        }
+      }
+    },
+    "SIDEBAR": {
+      "TABS": {
+        "ATTRIBUTES": "السمات",
+        "ACTIVITY": "النشاط",
+        "CASES": "الحالات",
+        "HISTORY": "History",
+        "NOTES": "ملاحظات",
+        "MEDIA": "Media",
+        "MERGE": "Merge",
+        "IDENTITIES": "الهويّات"
+      },
+      "HISTORY": {
+        "EMPTY_STATE": "لا توجد محادثات سابقة مرتبطة بجهة الاتصال هذه"
+      },
+      "ATTRIBUTES": {
+        "SEARCH_PLACEHOLDER": "Search for attributes",
+        "UNUSED_ATTRIBUTES": "{count} Used attribute | {count} Unused attributes",
+        "EMPTY_STATE": "There are no contact custom attributes available in this account. You can create a custom attribute in settings.",
+        "YES": "نعم",
+        "NO": "لا",
+        "TRIGGER": {
+          "SELECT": "اختر قيمة",
+          "INPUT": "أدخل القيمة"
+        },
+        "VALIDATIONS": {
+          "INVALID_NUMBER": "Invalid number",
+          "REQUIRED": "القيمة الصالحة مطلوبة",
+          "INVALID_INPUT": "Invalid input",
+          "INVALID_URL": "عنوان الرابط غير صالح",
+          "INVALID_DATE": "Invalid date"
+        },
+        "NO_ATTRIBUTES": "لم يتم العثور على سمات",
+        "API": {
+          "SUCCESS_MESSAGE": "تم تحديث الصفة المخصصة بنجاح",
+          "DELETE_SUCCESS_MESSAGE": "تم حذف الصفة المخصصة بنجاح",
+          "UPDATE_ERROR": "غير قادر على تحديث الصفة. الرجاء المحاولة مرة أخرى لاحقاً",
+          "DELETE_ERROR": "غير قادر على حذف الصفة. الرجاء المحاولة مرة أخرى لاحقاً"
+        }
+      },
+      "MERGE": {
+        "TITLE": "دمج جهة الاتصال",
+        "DESCRIPTION": "Combine two profiles into one, including all attributes and conversations. In case of conflict, the primary contact’s attributes will take precedence.",
+        "PRIMARY": "جهة الاتصال الرئيسية",
+        "PRIMARY_HELP_LABEL": "To be saved",
+        "PRIMARY_REQUIRED_ERROR": "Please select a contact to merge with before proceeding",
+        "PARENT": "To be merged",
+        "PARENT_HELP_LABEL": "ليتم حذفها",
+        "EMPTY_STATE": "No contacts found",
+        "PLACEHOLDER": "Search for primary contact",
+        "SEARCH_PLACEHOLDER": "بحث عن جهات الاتصال",
+        "SEARCH_ERROR_MESSAGE": "Could not search for contacts. Please try again later.",
+        "SUCCESS_MESSAGE": "تم دمج جهة الاتصال بنجاح",
+        "ERROR_MESSAGE": "تعذر دمج جهات الاتصال ، حاول مرة أخرى!",
+        "IS_SEARCHING": "جاري البحث...",
+        "BUTTONS": {
+          "CANCEL": "إلغاء",
+          "CONFIRM": "دمج جهة الاتصال"
+        },
+        "IRREVERSIBLE": "لا يمكن التراجع عن هذا الإجراء. يُسجَّل الدمج في سجل التدقيق.",
+        "CARRIED_OVER": "تنتقل المحادثات والرسائل والملاحظات والوسوم وسجل الحملات وحالات الدعم وروابط المتجر إلى جهة الاتصال التي يتم الاحتفاظ بها."
+      },
+      "NOTES": {
+        "PLACEHOLDER": "إضافة ملاحظة",
+        "WROTE": "كتب",
+        "YOU": "أنت",
+        "SAVE": "Save note",
+        "ADD_NOTE": "Add contact note",
+        "EXPAND": "Expand",
+        "COLLAPSE": "Collapse",
+        "NO_NOTES": "No notes, you can add notes from the contact details page.",
+        "EMPTY_STATE": "There are no notes associated to this contact. You can add a note by typing in the box above.",
+        "CONVERSATION_EMPTY_STATE": "There are no notes yet. Use the Add note button to create one.",
+        "DELETE": "حذف الملاحظة",
+        "LOADING": "جارٍ تحميل الملاحظات"
+      },
+      "ACTIVITY": {
+        "EMPTY_STATE": "لم يُسجَّل شيء لجهة الاتصال هذه بعد.",
+        "ERROR": "تعذّر تحميل هذا النشاط. أعد المحاولة، وإن تكرر الخطأ فتواصل مع الدعم.",
+        "PARTIAL": "تعذّر تحميل بعض النشاط ({sources}). وكل ما سواه معروض.",
+        "LOAD_MORE": "تحميل المزيد",
+        "LOADING": "جارٍ التحميل…",
+        "RATING": "تقييم {value}/5",
+        "DURATION": "{value} ث",
+        "FILTER": {
+          "ALL": "الكل",
+          "MESSAGES": "الرسائل",
+          "CONVERSATIONS": "المحادثات",
+          "CAMPAIGNS": "الحملات",
+          "AUTOMATIONS": "الأتمتة",
+          "COMMERCE": "التجارة",
+          "TICKETS": "الحالات"
+        },
+        "KIND": {
+          "MESSAGE_INCOMING": "رسالة واردة",
+          "MESSAGE_OUTGOING": "رسالة مُرسلة",
+          "MESSAGE_SYSTEM_TEMPLATE": "رسالة تلقائية",
+          "PRIVATE_NOTE": "ملاحظة خاصة",
+          "CONVERSATION_CREATED": "بدأت محادثة",
+          "CONVERSATION_STATUS_CHANGED": "تغيّرت حالة المحادثة",
+          "CONVERSATION_ACTIVITY": "تحديث على المحادثة",
+          "CONVERSATION_REOPENED": "أُعيد فتح المحادثة",
+          "CONVERSATION_RESOLVED": "تم حل المحادثة",
+          "FIRST_RESPONSE": "أُرسل أول رد",
+          "BOT_HANDOFF": "سُلِّمت إلى الفريق",
+          "BOT_RESOLVED": "حلّها البوت",
+          "CSAT_RESPONSE": "قيّم المحادثة",
+          "CAMPAIGN_QUEUED": "أُضيف إلى حملة",
+          "CAMPAIGN_SKIPPED": "تخطّته حملة",
+          "CAMPAIGN_SENT": "أُرسلت رسالة حملة",
+          "CAMPAIGN_DELIVERED": "سُلِّمت رسالة الحملة",
+          "CAMPAIGN_READ": "قُرئت رسالة الحملة",
+          "CAMPAIGN_FAILED": "رُفضت رسالة الحملة",
+          "AUTOMATION_EXECUTED": "نفّذت الأتمتة",
+          "AUTOMATION_SKIPPED": "امتنعت الأتمتة عن التنفيذ",
+          "FLOW_COMPLETED": "وصل المسار إلى النهاية",
+          "FLOW_FAILED": "توقف المسار على خطأ",
+          "FLOW_CANCELLED": "أُنهي المسار من الخارج",
+          "FLOW_HANDED_OFF": "سلّم المسار المحادثة للفريق",
+          "CART_ABANDONED": "مُبلَّغ عن ترك السلة",
+          "CART_COMPLETED": "أُكمل دفع السلة",
+          "COMMERCE_ACTION_PENDING": "طُلب إجراء على الطلب",
+          "COMMERCE_ACTION_RUNNING": "إجراء الطلب جارٍ",
+          "COMMERCE_ACTION_SUCCEEDED": "تم إجراء الطلب",
+          "COMMERCE_ACTION_FAILED": "رُفض إجراء الطلب",
+          "COMMERCE_ACTION_UNKNOWN": "ضاع رد إجراء الطلب",
+          "COMMERCE_CUSTOMER_LINKED": "تم ربطه بعميل في المتجر",
+          "TICKET_CREATED": "فُتحت حالة",
+          "TICKET_NOTE": "أُضيفت ملاحظة إلى حالة",
+          "TICKET_STATUS_CHANGED": "تغيّرت حالة القضية",
+          "TICKET_PRIORITY_CHANGED": "تغيّرت أولوية الحالة",
+          "TICKET_ASSIGNED": "تغيّر المُسند إليه في الحالة",
+          "TICKET_TEAM_CHANGED": "تغيّر فريق الحالة",
+          "TICKET_CATEGORY_CHANGED": "تغيّر تصنيف الحالة",
+          "TICKET_CONVERSATION_LINKED": "تم ربط محادثة بحالة",
+          "TICKET_CONVERSATION_UNLINKED": "تم إلغاء ربط محادثة بحالة",
+          "TICKET_SLA_APPLIED": "تم إرفاق سياسة اتفاقية خدمة بحالة",
+          "TICKET_SLA_FIRST_RESPONSE_MET": "تم الرد الأول على الحالة في الوقت المحدد",
+          "TICKET_SLA_FIRST_RESPONSE_BREACHED": "تم تفويت هدف الرد الأول للحالة",
+          "TICKET_SLA_RESOLUTION_BREACHED": "تم تفويت هدف حل الحالة",
+          "TICKET_RESOLVED": "تم حل الحالة",
+          "TICKET_REOPENED": "أُعيد فتح الحالة",
+          "TICKET_CLOSED": "أُغلقت الحالة"
+        }
+      },
+      "CASES": {
+        "EMPTY_STATE": "لم تُفتح أي حالة دعم لجهة الاتصال هذه.",
+        "ERROR": "تعذّر تحميل هذه الحالات. حاول مرة أخرى، وإذا تكرر الفشل فتواصل مع الدعم.",
+        "VIEW_ALL": "عرض كل حالات جهة الاتصال هذه"
+      },
+      "IDENTITIES": {
+        "DESCRIPTION": "كل ما يمكن الوصول إلى هذا العميل من خلاله. الرقم أو البريد الأساسي هو ما تستخدمه المحادثة الصادرة، والمرتبط هو ما تُطابق به الرسائل الواردة.",
+        "PRIMARY_TITLE": "أساسي",
+        "LINKED_TITLE": "يمكن الوصول إليه أيضاً عبر",
+        "ADD_TITLE": "ربط رقم أو بريد آخر",
+        "LINK": "ربط",
+        "UNLINK": "إلغاء الربط",
+        "LINKED": "تم الربط بجهة الاتصال.",
+        "UNLINKED": "لم يعد مرتبطاً بجهة الاتصال.",
+        "EMPTY_STATE": "لا يوجد رقم هاتف أو بريد إلكتروني لجهة الاتصال هذه بعد.",
+        "LOAD_ERROR": "تعذّر تحميل الأرقام والبُرُد المرتبطة.",
+        "LINK_ERROR": "تعذّر الربط.",
+        "UNLINK_ERROR": "تعذّر إلغاء الربط.",
+        "TYPE": {
+          "PHONE": "هاتف",
+          "EMAIL": "بريد إلكتروني"
+        },
+        "PLACEHOLDER": {
+          "PHONE": "+965 5000 0000",
+          "EMAIL": "name{'@'}example.com"
+        },
+        "SOURCE": {
+          "AGENT_LINKED": "ربطه أحد الموظفين",
+          "MERGED": "من عملية دمج"
+        }
+      }
+    },
+    "EMPTY_STATE": {
+      "TITLE": "No contacts found in this account",
+      "SUBTITLE": "Start adding new contacts by clicking on the button below",
+      "BUTTON_LABEL": "Add contact",
+      "SEARCH_EMPTY_STATE_TITLE": "لا توجد جهات اتصال تطابق بحثك 🔍",
+      "LIST_EMPTY_STATE_TITLE": "No contacts available in this view 📋",
+      "ACTIVE_EMPTY_STATE_TITLE": "No contacts are active at the moment 🌙"
+    },
+    "LOAD_MORE": "تحميل المزيد",
+    "AUDIENCES": {
+      "TITLE": "الجماهير",
+      "LOADING": "جارٍ تحميل الجماهير",
+      "SHARED": "مشترك",
+      "PERSONAL": "خاص بك",
+      "NO_CONDITIONS": "لا توجد شروط محفوظة، لذلك يطابق هذا الجمهور كل جهات الاتصال.",
+      "COUNT": "لا توجد جهات اتصال | جهة اتصال واحدة | {count} جهة اتصال",
+      "COUNT_ACTION": "احسب جهات الاتصال الآن",
+      "COUNT_FAILED": "تعذّر حساب هذا الجمهور. افتحه لمعرفة السبب.",
+      "FROM_FILTERS": "ابنِ من الفلاتر",
+      "ACTIONS": {
+        "MORE": "إجراءات أخرى لـ {name}",
+        "OPEN": "افتح هذا الجمهور",
+        "EDIT": "تعديل شروطه",
+        "DELETE": "حذف هذا الجمهور"
+      },
+      "EMPTY_STATE": {
+        "TITLE": "لا توجد جماهير بعد",
+        "DESCRIPTION": "الجمهور قاعدة محفوظة عن عملائك، تُطبَّق من جديد في كل مرة يُستخدم فيها. ابدأ من قالب جاهز، أو اختر الشروط بنفسك من قائمة جهات الاتصال."
+      }
+    }
+  },
+  "CONTACTS_BULK_ACTIONS": {
+    "ASSIGN_LABELS": "تعيين التسميات",
+    "REMOVE_LABELS": "Remove Labels",
+    "ASSIGN_LABELS_SUCCESS": "تم تعيين التسميات بنجاح.",
+    "ASSIGN_LABELS_FAILED": "Failed to assign labels",
+    "REMOVE_LABELS_SUCCESS": "Labels removed successfully.",
+    "REMOVE_LABELS_FAILED": "Failed to remove labels",
+    "DESCRIPTION": "Select the labels you want to add to the selected contacts.",
+    "NO_LABELS_FOUND": "No labels available yet.",
+    "SELECTED_COUNT": "{count} selected",
+    "CLEAR_SELECTION": "Clear selection",
+    "SELECT_ALL": "Select all ({count})",
+    "DELETE_CONTACTS": "حذف",
+    "DELETE_SUCCESS": "Contacts deleted successfully.",
+    "DELETE_FAILED": "Failed to delete contacts.",
+    "DELETE_DIALOG": {
+      "TITLE": "Delete selected contacts",
+      "SINGULAR_TITLE": "Delete selected contact",
+      "DESCRIPTION": "This will permanently delete {count} selected contacts. This action cannot be undone.",
+      "SINGULAR_DESCRIPTION": "This will permanently delete the selected contact. This action cannot be undone.",
+      "CONFIRM_MULTIPLE": "Delete contacts",
+      "CONFIRM_SINGLE": "حذف جهة الاتصال"
+    },
+    "SELECT_ALL_MATCHING": "تحديد الكل ({count}) في هذا العرض",
+    "SELECT_ALL_MATCHING_UNCOUNTED": "تحديد كل النتائج في هذا العرض",
+    "SELECTED_ALL_MATCHING_COUNT": "تم تحديد الكل ({count})",
+    "SELECTED_ALL_MATCHING": "تم تحديد كل النتائج في هذا العرض",
+    "TOO_MANY_MATCHING": "في هذا العرض جهات اتصال أكثر من أن يُعمل عليها مرة واحدة. ضيّقه أولاً."
+  },
+  "COMPOSE_NEW_CONVERSATION": {
+    "CONTACT_SEARCH": {
+      "ERROR_MESSAGE": "We couldn’t complete the search. Please try again."
+    },
+    "CONTACT_CREATE": {
+      "ERROR_MESSAGE": "We couldn’t create the contact. Please try again."
+    },
+    "FORM": {
+      "GO_TO_CONVERSATION": "عرض",
+      "SUCCESS_MESSAGE": "The message was sent successfully!",
+      "ERROR_MESSAGE": "An error occurred while creating the conversation. Please try again later.",
+      "NO_INBOX_ALERT": "There are no available inboxes to start a conversation with this contact.",
+      "CONTACT_SELECTOR": {
+        "LABEL": "إلى:",
+        "TAG_INPUT_PLACEHOLDER": "Enter at least 2 characters to search by name, email, or phone number",
+        "CONTACT_CREATING": "Creating contact..."
+      },
+      "INBOX_SELECTOR": {
+        "LABEL": "Via:",
+        "BUTTON": "Show inboxes"
+      },
+      "EMAIL_OPTIONS": {
+        "SUBJECT_LABEL": "الموضوع :",
+        "SUBJECT_PLACEHOLDER": "Enter your email subject here",
+        "CC_LABEL": "نسخة من البريد:",
+        "CC_PLACEHOLDER": "Enter at least 2 characters to search by email",
+        "BCC_LABEL": "نسخة خفية من البريد:",
+        "BCC_PLACEHOLDER": "Enter at least 2 characters to search by email",
+        "BCC_BUTTON": "نسخة خفية من البريد"
+      },
+      "MESSAGE_EDITOR": {
+        "PLACEHOLDER": "اكتب رسالتك هنا..."
+      },
+      "WHATSAPP_OPTIONS": {
+        "LABEL": "Select template",
+        "SEARCH_PLACEHOLDER": "Search templates",
+        "EMPTY_STATE": "No templates found",
+        "TEMPLATE_PARSER": {
+          "TEMPLATE_NAME": "WhatsApp template: {templateName}",
+          "VARIABLES": "المتغيرات",
+          "BACK": "العودة للخلف",
+          "SEND_MESSAGE": "إرسال الرسالة"
+        }
+      },
+      "TWILIO_OPTIONS": {
+        "LABEL": "Select template",
+        "SEARCH_PLACEHOLDER": "Search templates",
+        "EMPTY_STATE": "No templates found",
+        "TEMPLATE_PARSER": {
+          "BACK": "العودة للخلف",
+          "SEND_MESSAGE": "إرسال الرسالة"
+        }
+      },
+      "ACTION_BUTTONS": {
+        "DISCARD": "Discard",
+        "SEND": "Send ({keyCode})"
+      }
+    }
+  },
+  "CONTACT_ERRORS": {
+    "PHONE_NUMBER": {
+      "TAKEN": "رقم الهاتف هذا يعود إلى جهة اتصال أخرى في هذا الحساب.",
+      "INVALID": "أدخل الرقم بالصيغة الدولية، مثل +96522201234.",
+      "NEEDS_COUNTRY": "اختر الدولة، أو أدخل الرقم بالصيغة الدولية."
+    },
+    "EMAIL": {
+      "TAKEN": "عنوان البريد الإلكتروني هذا يعود إلى جهة اتصال أخرى في هذا الحساب.",
+      "INVALID": "أدخل عنوان بريد إلكتروني صالحاً."
+    },
+    "IDENTIFIER": {
+      "TAKEN": "هذا المعرِّف يعود إلى جهة اتصال أخرى في هذا الحساب."
+    },
+    "LABELS": {
+      "NOT_IN_ACCOUNT": "هذا التصنيف لم يعد موجوداً في هذا الحساب."
+    },
+    "GENERIC": "لم يتم حفظ جهة الاتصال. تحقق من البيانات وحاول مرة أخرى.",
+    "DUPLICATE": {
+      "TITLE": "توجد جهة اتصال بهذه البيانات بالفعل",
+      "OPEN": "فتح {name}",
+      "ADD_LABEL": "إضافة «{label}» إلى {name}",
+      "LABEL_ADDED": "تمت إضافة «{label}» إلى {name}",
+      "LABEL_FAILED": "لم تتم إضافة «{label}» إلى {name}",
+      "UNNAMED": "جهة الاتصال الموجودة"
+    }
+  }
+}

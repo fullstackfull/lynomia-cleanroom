@@ -1,0 +1,106 @@
+class InboxPolicy < ApplicationPolicy
+  class Scope
+    attr_reader :user_context, :user, :scope, :account, :account_user
+
+    def initialize(user_context, scope)
+      @user_context = user_context
+      @user = user_context[:user]
+      @account = user_context[:account]
+      @account_user = user_context[:account_user]
+      @scope = scope
+    end
+
+    def resolve
+      user.assigned_inboxes
+    end
+  end
+
+  def index?
+    true
+  end
+
+  def show?
+    # FIXME: for agent bots, lets bring this validation to policies as well in future
+    return true if @user.is_a?(AgentBot)
+
+    Current.user.assigned_inboxes.include? record
+  end
+
+  def assignable_agents?
+    true
+  end
+
+  def agent_bot?
+    true
+  end
+
+  # Deliberately open at the CLASS level. `check_authorization` authorizes the Inbox *class*
+  # (`app/controllers/api/base_controller.rb:14-18`), so `record` here is `Inbox`, not an inbox — a membership
+  # test would evaluate `assigned_inboxes.include?(Inbox)`, which is always false, and would lock out
+  # administrators too. The record-level gate runs one callback earlier: `fetch_inbox` loads from
+  # `Current.account.inboxes` and then `authorize @inbox, :show?`, so a foreign-account id 404s and a non-member
+  # 401s before this is consulted.
+  def message_templates?
+    true
+  end
+
+  def campaigns?
+    @account_user.administrator?
+  end
+
+  def create?
+    @account_user.administrator?
+  end
+
+  def update?
+    @account_user.administrator?
+  end
+
+  def destroy?
+    @account_user.administrator?
+  end
+
+  def set_agent_bot?
+    @account_user.administrator?
+  end
+
+  def avatar?
+    @account_user.administrator?
+  end
+
+  def sync_templates?
+    @account_user.administrator?
+  end
+
+  def whatsapp_business_management_token?
+    @account_user.administrator?
+  end
+
+  def health?
+    @account_user.administrator?
+  end
+
+  def reset_secret?
+    @account_user.administrator?
+  end
+
+  def rotate_hmac_token?
+    @account_user.administrator?
+  end
+
+  def enable_whatsapp_calling?
+    @account_user.administrator?
+  end
+
+  def disable_whatsapp_calling?
+    @account_user.administrator?
+  end
+
+  def set_inbound_calls?
+    @account_user.administrator?
+  end
+
+  def set_call_recording?
+    @account_user.administrator?
+  end
+end

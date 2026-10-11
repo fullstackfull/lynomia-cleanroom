@@ -1,0 +1,121 @@
+parameters:
+  - $ref: '#/components/parameters/account_id'
+
+get:
+  tags:
+    - Conversations
+  operationId: conversationList
+  description: List all the conversations with pagination
+  summary: Conversations List
+  security:
+    - userApiKey: []
+  parameters:
+    - name: assignee_type
+      in: query
+      schema:
+        type: string
+        enum: ['me', 'unassigned', 'all', 'assigned']
+        default: 'all'
+      description: Filter conversations by assignee type.
+    - name: status
+      in: query
+      schema:
+        type: string
+        enum: ['all', 'open', 'resolved', 'pending', 'snoozed']
+        default: 'open'
+      description: Filter by conversation status.
+    - name: q
+      in: query
+      schema:
+        type: string
+      description: Filters conversations with messages containing the search term
+    - name: inbox_id
+      in: query
+      schema:
+        type: integer
+    - name: team_id
+      in: query
+      schema:
+        type: integer
+    - name: labels
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+    - name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: paginate through conversations
+
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/conversation_list'
+    '400':
+      description: Bad Request Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/bad_request_error'
+
+post:
+  tags:
+    - Conversations
+  operationId: newConversation
+  summary: Create New Conversation
+  description: |
+    Creating a conversation requires a `source_id`, which identifies a contact's connection to one
+    inbox rather than the conversation itself.
+
+    Send `inbox_id` and `contact_id` together and the connection is created if it does not exist, so
+    `source_id` may be a value you choose — this is the usual path for an API channel inbox. Send
+    `source_id` on its own and it must match a connection that already exists, or the request returns
+    `404`.
+
+    How the value is formed depends on the channel: a website widget generates its own and reports it
+    on webhook events, Twilio phone channels use the phone number in E.164 format, email channels use
+    the contact's email address, and an API channel accepts any string you keep stable per contact.
+  security:
+    - userApiKey: []
+    - agentBotApiKey: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/conversation_create_payload'
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                description: ID of the conversation
+              account_id:
+                type: number
+                description: Account Id
+              inbox_id:
+                type: number
+                description: ID of the inbox
+    '403':
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/bad_request_error'
+    '404':
+      description: No contact inbox matches the source_id, and inbox_id and contact_id were not both supplied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/bad_request_error'

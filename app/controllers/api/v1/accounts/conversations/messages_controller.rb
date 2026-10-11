@@ -1,0 +1,132 @@
+class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::Conversations::BaseController
+  before_action :ensure_api_inbox, only: :update
+
+  def index
+    @messages = message_finder.perform
+  end
+
+  def create
+    user = Current.user || @resource
+    mb = Messages::MessageBuilder.new(user, @conversation, params)
+    @message = mb.perform
+  rescue StandardError => e
+    render_could_not_create_error(e.message)
+  end
+
+  def update
+    Messages::StatusUpdateService.new(message, permitted_params[:status], permitted_params[:external_error]).perform
+    @message = message
+  end
+
+  def destroy
+    ActiveRecord::Base.transaction do
+      message.update!(content: I18n.t('conversations.messages.deleted'), content_type: :text, content_attributes: { deleted: true })
+      message.attachments.destroy_all
+    end
+  end
+
+  # Lynomia: a refusal Meta scoped to the RECIPIENT is one it will give again for the same message to the same
+  # person (Whatsapp::DeliveryFailure), so Retry is refused with Meta's reason rather than silently re-sending.
+  # Re-sending would not bypass Meta's decision, only repeat it — and each attempt is another quality signal
+  # against the number. An account-scoped refusal such as a billing problem stays retryable, because fixing it
+  # outside Lynomia genuinely makes the same message send.
+  def retry
+    return if message.blank?
+
+    failure = Whatsapp::DeliveryFailure.for(message)
+    if failure.recipient_scoped?
+      return render_could_not_create_error(
+        I18n.t('errors.whatsapp.recipient_delivery_restricted', reason: message.external_error)
+      )
+    end
+
+    ::SendReplyJob.perform_later(message.id) if claim_message_retry
+  rescue StandardError => e
+    render_could_not_create_error(e.message)
+  end
+
+  def translate
+    return head :ok if already_translated_content_available?
+
+    translated_content = Integrations::GoogleTranslate::ProcessorService.new(
+      message: message,
+      target_language: permitted_params[:target_language]
+    ).perform
+
+    if translated_content.present?
+      translations = {}
+      translations[permitted_params[:target_language]] = translated_content
+      translations = message.translations.merge!(translations) if message.translations.present?
+      message.update!(translations: translations)
+    end
+
+    render json: { content: translated_content }
+  rescue Google::Cloud::Error => e
+    # `details` carries the clean human message; `message` includes gRPC debug noise
+    render_could_not_create_error(e.details.presence || e.message)
+  end
+
+  private
+
+  def message
+    @message ||= @conversation.messages.find(permitted_params[:id])
+  end
+
+  def message_finder
+    @message_finder ||= MessageFinder.new(@conversation, params)
+  end
+
+  def claim_message_retry
+    message.with_lock do
+      next false unless message.failed?
+
+      # Capture the provider's reason BEFORE anything clears it. Moving to 'sent' nils external_error (a non-failed
+      # status resolves to no error), and the content_attributes rewrite below drops whatever was there, so a
+      # retry used to destroy the only record of why Meta refused the message. Somebody troubleshooting a failed
+      # WhatsApp send must not lose the reason because they pressed Retry.
+      failure_history = previous_failure_attributes
+      Messages::StatusUpdateService.new(message, 'sent').perform
+      previous_source_id = message.source_id
+      retry_attributes = { content_attributes: retry_content_attributes.merge(failure_history) }
+      retry_attributes[:source_id] = nil unless @conversation.inbox.api? || @conversation.inbox.web_widget?
+      message.update!(retry_attributes)
+      if retry_attributes.key?(:source_id) && previous_source_id.present?
+        Rails.logger.info "Cleared older source ID #{previous_source_id} for message #{message.id}"
+      end
+      true
+    end
+  end
+
+  def retry_content_attributes
+    return message.content_attributes if message.content_attributes.dig('whatsapp_contact_info', 'type') == 'request'
+
+    {}
+  end
+
+  # The last provider failure, kept on the message so the next attempt does not erase the previous reason. One
+  # slot, not a history: the useful thing is the most recent real refusal, and the brief for this work asks for
+  # the existing fields rather than an event store. `retried_at` says the reason is from a previous attempt, so a
+  # reader cannot mistake it for the current state.
+  def previous_failure_attributes
+    reason = message.external_error.presence || message.content_attributes['previous_external_error']
+    return {} if reason.blank?
+
+    { 'previous_external_error' => reason, 'retried_at' => Time.current.iso8601 }
+  end
+
+  def permitted_params
+    params.permit(:id, :target_language, :status, :external_error)
+  end
+
+  def already_translated_content_available?
+    message.translations.present? && message.translations[permitted_params[:target_language]].present?
+  end
+
+  # API inbox check
+  def ensure_api_inbox
+    # Only API inboxes can update messages
+    render json: { error: 'Message status update is only allowed for API inboxes' }, status: :forbidden unless @conversation.inbox.api?
+  end
+end
+
+Api::V1::Accounts::Conversations::MessagesController.prepend_mod_with('Api::V1::Accounts::Conversations::MessagesController')

@@ -1,0 +1,151 @@
+# Store lifecycle, for account administrators and Salla installation events. Credentials are saved only once verified
+# (WooCommerce keys by the provider health check, Salla tokens by a signed installation confirmed with Salla), so a store
+# is never saved as active with credentials that do not work. Audit entries never carry credentials.
+#
+# Every new connection of every provider, and every disconnected store coming back, passes through #attach or
+# #rotate_credentials, which keep the account within its `stores` limit (Billing::ResourceLimit; disconnected stores do
+# not count, an empty limit is unlimited).
+class Commerce::StoreConnection
+  def initialize(account:, user:)
+    @account = account
+    @user = user
+  end
+
+  def connect(provider:, base_url:, credentials:, name: nil)
+    ensure_encryption!
+    store = @account.commerce_stores.new(provider: provider, base_url: Commerce::StoreUrl.parse(base_url).to_s, created_by: @user)
+    adapter = Commerce::Providers.for(store, credentials: credentials)
+    adapter.health
+    attach(store, adapter.store_identity, credentials, name: name).tap { |connected| register_webhooks(connected) }
+  end
+
+  # Saves a connection whose store identity and credentials are already verified: by the health check in #connect, or
+  # for Salla by a signed installation confirmed with Salla (Commerce::Salla::Installation). The new store's metadata is
+  # kept when an earlier row of the same store is reused.
+  def attach(store, identity, credentials, name: nil, event: 'commerce.store_connected')
+    ensure_encryption!
+    store = Commerce::Store.transaction do
+      @account.lock!
+      claim(store, identity[:external_store_id]).tap do |row|
+        ensure_within_plan!(row)
+        row.update!(name: name.presence || row.name.presence || identity[:name], credentials: credentials, status: :active,
+                    metadata: row.metadata.merge(store.metadata, 'verified_at' => Time.current.iso8601))
+      end
+    end
+    audit(event, store, provider: store.provider, external_store_id: store.external_store_id)
+    store
+  rescue ActiveRecord::RecordNotUnique
+    raise Commerce::Error, 'STORE_ALREADY_CONNECTED'
+  end
+
+  def rotate_credentials(store, credentials)
+    ensure_encryption!
+    Commerce::Providers.for(store, credentials: credentials).health
+    previous_status = store.status
+    Commerce::Store.transaction do
+      @account.lock!
+      ensure_within_plan!(store)
+      store.update!(credentials: credentials, status: :active, metadata: store.metadata.merge('verified_at' => Time.current.iso8601))
+    end
+    Commerce::Cache.purge(store)
+    audit('commerce.credentials_rotated', store, status: [previous_status, store.status])
+    register_webhooks(store)
+    store
+  end
+
+  def enable(store)
+    raise Commerce::Error, 'PROVIDER_DISABLED' unless Commerce::Providers.enabled?(store.provider)
+    raise Commerce::Error, 'AUTH_INVALID' if store.credentials.blank?
+
+    Commerce::Providers.for(store).health
+    store.update!(status: :active, metadata: store.metadata.merge('verified_at' => Time.current.iso8601))
+    audit('commerce.store_enabled', store, status: %w[disabled active])
+    register_webhooks(store)
+    store
+  end
+
+  # An administrator's opt-in to order actions (docs/commerce/28-commerce-actions-architecture.md). Turning them on needs
+  # the installation to offer the provider's actions and credentials that can write: a Read key is never upgraded here,
+  # the administrator replaces it. Turning them off always works.
+  def change_order_actions(store, enabled)
+    Commerce::OrderActions.new(store: store, contact_id: nil, user: @user, account_user: nil).store_blocker!(opt_in: false) if enabled
+    previous = store.settings['order_actions'] == true
+    store.update!(settings: store.settings.merge('order_actions' => enabled))
+    audit('commerce.order_actions_changed', store, order_actions: [previous, enabled])
+    store
+  end
+
+  # The store answered that its credentials no longer work: it is flagged for an administrator and its cached data is
+  # dropped, so nothing is shown from it until it is authorized again.
+  def credentials_rejected(store)
+    return unless store.active?
+
+    store.update!(status: :needs_reauth)
+    Commerce::Cache.purge(store)
+    audit('commerce.store_needs_reauth', store, {})
+  end
+
+  def disable(store)
+    previous_status = store.status
+    store.update!(status: :disabled)
+    Commerce::Cache.purge(store)
+    audit('commerce.store_disabled', store, status: [previous_status, 'disabled'])
+    store
+  end
+
+  # Credentials, customer links and cached store data are deleted; the row stays (status disconnected) so the store can be reconnected
+  # or connected by another account later. Contacts and conversations are kept.
+  def disconnect(store, event: 'commerce.store_disconnected')
+    release(store)
+    links = 0
+    store.transaction do
+      links = store.customer_links.delete_all
+      store.update!(status: :disconnected, credentials: nil)
+    end
+    Commerce::Cache.purge(store)
+    audit(event, store, customer_links_removed: links)
+    store
+  end
+
+  private
+
+  # What the provider set up in the store for Lynomia is removed while the credentials still exist. Best effort: a store
+  # that cannot be reached is disconnected anyway.
+  def release(store)
+    Commerce::Providers.for(store).release if store.credentials.present?
+  rescue Commerce::Error => e
+    Rails.logger.warn("[Commerce:#{store.provider}] release failed store=#{store.id} code=#{e.code}")
+  end
+
+  def register_webhooks(store)
+    Commerce::WebhookRegistrationJob.perform_later(store.id) if Commerce::Providers::REGISTRY.fetch(store.provider).constantize.registers_webhooks?
+  end
+
+  def ensure_encryption!
+    raise Commerce::Error, 'ENCRYPTION_NOT_CONFIGURED' unless Chatwoot.encryption_configured?
+  end
+
+  # A store that is not counted yet (new, or disconnected) may become connected only below the account's
+  # limit. Already inside #attach's transaction and account lock, which is what Billing::ResourceLimit needs.
+  def ensure_within_plan!(store)
+    return if store.persisted? && !store.disconnected?
+    raise Commerce::Error, 'STORE_LIMIT_REACHED' if Billing::ResourceLimit.exceeded(@account, :stores)
+  end
+
+  # One account owns a store. Reconnecting in the same account reuses the disconnected row; a store another account
+  # disconnected is released to this one; anything else is already connected.
+  def claim(store, external_store_id)
+    existing = Commerce::Store.find_by(provider: store.provider, external_store_id: external_store_id)
+    store.external_store_id = external_store_id
+    return store if existing.nil?
+    raise Commerce::Error, 'STORE_ALREADY_CONNECTED' unless existing.disconnected?
+    return existing.tap { |row| row.base_url = store.base_url } if existing.account_id == @account.id
+
+    existing.destroy!
+    store
+  end
+
+  def audit(event, store, changes)
+    Commerce::AuditTrail.record(event, auditable: store, user: @user, changes: changes)
+  end
+end

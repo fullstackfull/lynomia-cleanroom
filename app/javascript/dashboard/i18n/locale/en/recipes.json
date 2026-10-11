@@ -1,0 +1,246 @@
+{
+  "RECIPES": {
+    "USE": "Use this",
+    "CREATE": "Create",
+    "BACK": "Choose a different one",
+    "FROM_SCRATCH": "Start from scratch instead",
+    "REQUIRES": "Needs {what} first",
+    "RECOMMENDED": {
+      "STORE": "Fits your store",
+      "AUDIENCE": "Uses an audience you have"
+    },
+    "NO_INPUTS": "Nothing to choose — this one is ready to create.",
+    "CREATED": "Created. Review it before you turn it on.",
+    "CREATE_ERROR": "Couldn’t create it. Check the values and try again.",
+    "LANGUAGES": {
+      "AR": "Arabic",
+      "EN": "English",
+      "BOTH": "Arabic and English"
+    },
+    "ERRORS": {
+      "REQUIRED": "Choose a value",
+      "OUT_OF_RANGE": "Enter a number between {min} and {max}",
+      "INVALID_URL": "Enter an http or https address"
+    },
+    "REQUIREMENTS": {
+      "CONTACT_FILTER": "contact filtering",
+      "COMMERCE": "Commerce",
+      "COMMERCE_STORE": "a connected store",
+      "COMMERCE_CURRENCY": "an order in at least one currency",
+      "FLOW_BUILDER": "Flow Builder",
+      "AUTOMATIONS": "Automation",
+      "SHARED_AUDIENCE": "a shared audience",
+      "TEAM": "a team",
+      "LABEL": "a label",
+      "WEBHOOKS": "API and webhooks"
+    },
+    "INPUTS": {
+      "CHOOSE": "Choose",
+      "OPTIONAL": "(optional)",
+      "NO_LABELS": "This account has no labels yet.",
+      "URL_PLACEHOLDER": "https://example.com/hook",
+      "CURRENCY": "Currency",
+      "AMOUNT": "Minimum visible spend",
+      "ORDERS": "More than this many visible orders",
+      "DAYS": "Bought within the last … days",
+      "STORE": "Store",
+      "TEAM": "Team",
+      "VIP_TEAM": "Team for this audience",
+      "STANDARD_TEAM": "Team for everyone else",
+      "ARABIC_TEAM": "Team for Arabic",
+      "ENGLISH_TEAM": "Team for English",
+      "ORDERS_TEAM": "Team for order questions",
+      "PRODUCTS_TEAM": "Team for product questions",
+      "OTHER_TEAM": "Team for anything else",
+      "LABELS": "Labels",
+      "AUDIENCE": "Shared audience",
+      "PRIORITY": "Priority",
+      "LANGUAGE": "Language of the bot's messages",
+      "EVENT": "Order event",
+      "URL": "Address to call"
+    },
+    "AUDIENCE": {
+      "TITLE": "Start from an audience preset",
+      "ACTION": "Start from a preset",
+      "DESCRIPTION": "A preset saves a normal audience: its conditions stay editable and its members are worked out fresh every time it is opened.",
+      "HIGH_VALUE_BUYERS": {
+        "NAME": "High-value buyers",
+        "DESCRIPTION": "Contacts whose visible spend in one currency is above an amount you choose. Spend is never converted between currencies."
+      },
+      "REPEAT_BUYERS": {
+        "NAME": "Repeat buyers",
+        "DESCRIPTION": "Contacts with more than a given number of visible orders."
+      },
+      "RECENT_BUYERS": {
+        "NAME": "Recent buyers",
+        "DESCRIPTION": "Contacts whose last visible purchase was within the last few days."
+      },
+      "CUSTOMERS_WITH_ACTIVE_ORDER": {
+        "NAME": "Customers with an open order",
+        "DESCRIPTION": "Contacts who have at least one order that is not finished yet."
+      },
+      "CUSTOMERS_WITH_SHIPPED_ORDER": {
+        "NAME": "Customers with a shipped order",
+        "DESCRIPTION": "Contacts with an order the store has marked shipped."
+      },
+      "STORE_CUSTOMERS": {
+        "NAME": "Customers of one store",
+        "DESCRIPTION": "Contacts linked to a customer in the store you choose."
+      },
+      "LINKED_COMMERCE_CUSTOMERS": {
+        "NAME": "All linked customers",
+        "DESCRIPTION": "Contacts linked to a customer in any connected store."
+      },
+      "CONTACTED_US": {
+        "NAME": "Has contacted us",
+        "DESCRIPTION": "Contacts who have at least one conversation, in any status. Membership is worked out fresh every time, so it is never out of date."
+      },
+      "NEVER_CONTACTED_US": {
+        "NAME": "Has never contacted us",
+        "DESCRIPTION": "Contacts with no conversation at all — the people an imported list is usually meant to reach."
+      }
+    },
+    "FLOW": {
+      "TITLE": "Start from a flow template",
+      "ACTION": "Start from a template",
+      "DESCRIPTION": "A template creates a normal flow draft: every node, message and branch is yours to edit, and nothing reaches a customer until you publish it.",
+      "PROVENANCE": "Created from the {name} template (v{version}).",
+      "COMMERCE_ORDER_TRACKING": {
+        "NAME": "Order tracking bot",
+        "DESCRIPTION": "Offers to track an order, finds the customer's own latest order, asks for an order number when there is none, and hands anything else to your team.",
+        "PROVIDER_NOTE": "WooCommerce, Zid and Shopify can find an order by its number. Salla cannot, so on a Salla store the customer reaches your team instead. Delivery tracking detail also differs by platform."
+      },
+      "COMMERCE_AFTER_SALES": {
+        "NAME": "Order issue intake",
+        "DESCRIPTION": "Asks for the order number, finds the order, asks what went wrong, and hands the conversation over with the answer already noted.",
+        "PROVIDER_NOTE": "WooCommerce, Zid and Shopify can find an order by its number. Salla cannot, so on a Salla store the customer reaches your team instead."
+      },
+      "SUPPORT_DEPARTMENT_ROUTING": {
+        "NAME": "Department routing bot",
+        "DESCRIPTION": "Asks which topic the customer needs, acknowledges the choice, and hands the conversation to the team you mapped to it."
+      },
+      "VIP_PRIORITY_ROUTING": {
+        "NAME": "VIP priority routing",
+        "DESCRIPTION": "Checks whether the contact is in a shared audience, then sends them to your dedicated team or to the standard one."
+      },
+      "BILINGUAL_WELCOME": {
+        "NAME": "Arabic or English welcome",
+        "DESCRIPTION": "Asks which language the customer prefers, replies in that language, and routes them to the team that speaks it. No language detection."
+      },
+      "WHATSAPP_WELCOME_MENU": {
+        "NAME": "Welcome and collect the request",
+        "DESCRIPTION": "Greets the customer, asks what they need, confirms it has been received, and hands the conversation to your team with the request in view."
+      },
+      "FAQ_MENU": {
+        "NAME": "The questions you answer every day",
+        "DESCRIPTION": "A menu of your most-asked questions with an answer for each, a way back to the menu, and the team one tap away. Every answer is yours to edit."
+      },
+      "COMPLAINT_INTAKE": {
+        "NAME": "A complaint arrives sorted",
+        "DESCRIPTION": "Takes the complaint in the customer’s own words, labels the conversation so you can count them later, asks what kind it is, and hands it to a team at the priority you choose."
+      }
+    },
+    "AUTOMATION": {
+      "TITLE": "Start from an automation recipe",
+      "ACTION": "Start from a recipe",
+      "DESCRIPTION": "A recipe creates a normal automation rule, switched off, for you to read and change before it runs.",
+      "PROVENANCE": "Created from the {name} recipe (v{version}).",
+      "COMMERCE_ABANDONED_CART_TEMPLATE": {
+        "NAME": "Abandoned cart gets an approved WhatsApp template",
+        "DESCRIPTION": "When a store reports a cart abandoned, send the customer an approved WhatsApp template. The rule is created switched off: choose the WhatsApp inbox, the approved template and its variables in the rule, then turn it on.",
+        "PROVIDER_NOTE": "Only Zid reports abandoned carts to Lynomia, and cart ingestion is still being verified against a real Zid store, so this rule will not run yet even once you switch it on."
+      },
+      "COMMERCE_NEW_ORDER_ROUTING": {
+        "NAME": "New order goes to a team",
+        "DESCRIPTION": "When a store records a new order, label the customer's conversation and assign it to the team that handles orders."
+      },
+      "COMMERCE_ORDER_SHIPPED_LABEL": {
+        "NAME": "Label a shipped order",
+        "DESCRIPTION": "When a store marks an order shipped, add a label to the customer's conversation so your team can see it at a glance.",
+        "PROVIDER_NOTE": "Salla, Zid and Shopify report an order as shipped. WooCommerce has no shipped status, so this rule will not run for a WooCommerce store."
+      },
+      "COMMERCE_REFUND_ESCALATION": {
+        "NAME": "Refund gets escalated",
+        "DESCRIPTION": "When an order is refunded, raise the conversation's priority and send it to the team that handles refunds."
+      },
+      "COMMERCE_EVENT_WEBHOOK": {
+        "NAME": "Send an order event to another system",
+        "DESCRIPTION": "When the order event you choose happens, call an address of yours with the existing webhook action."
+      },
+      "VIP_AUDIENCE_PRIORITY": {
+        "NAME": "Audience gets priority",
+        "DESCRIPTION": "When someone in a shared audience starts a conversation, set its priority and send it to your dedicated team."
+      },
+      "HIGH_VALUE_SPEND_ROUTING": {
+        "NAME": "High-value customer routing",
+        "DESCRIPTION": "When someone whose visible spend in one currency is above an amount you choose starts a conversation, route it to a team of your choice."
+      },
+      "ACTIVE_ORDER_ROUTING": {
+        "NAME": "Customer with an open order",
+        "DESCRIPTION": "When someone who has an order still in progress starts a conversation, send it to the team that can answer about it."
+      },
+      "COMMERCE_ORDER_PAID_PRIORITY": {
+        "NAME": "A paid order moves up the queue",
+        "DESCRIPTION": "When a customer's order is paid for, label the conversation and raise its priority so the order is handled before the questions."
+      },
+      "COMMERCE_ORDER_CANCELLED_FOLLOWUP": {
+        "NAME": "Someone follows up a cancelled order",
+        "DESCRIPTION": "When an order is cancelled, send the conversation to a team with a note asking them to find out why. The customer is never messaged automatically.",
+        "PROVIDER_NOTE": "WooCommerce, Salla and Zid report an order as cancelled. Shopify does not, so this rule will not run for a Shopify store."
+      },
+      "GREET_NEW_CONVERSATION": {
+        "NAME": "Every new conversation gets an answer",
+        "DESCRIPTION": "When someone starts a conversation, reply at once so they know they have been heard. Edit the wording before you turn it on."
+      },
+      "AUDIENCE_CONVERSATION_LABEL": {
+        "NAME": "An audience’s conversations are labelled",
+        "DESCRIPTION": "When someone in a shared audience starts a conversation, label it — so the group you described can be found in the inbox and in reports."
+      }
+    },
+    "MACRO": {
+      "TITLE": "Start from a macro starter",
+      "ACTION": "Start from a starter",
+      "DESCRIPTION": "A starter saves a normal macro: an agent clicks it on a conversation and it runs the steps. Everything stays editable, and nothing runs on its own.",
+      "PROVENANCE": "Created from the {name} starter (v{version}).",
+      "ESCALATE_CONVERSATION": {
+        "NAME": "Escalate this conversation",
+        "DESCRIPTION": "Raises the priority, hands it to a team, labels it, and leaves a note for whoever picks it up."
+      },
+      "TAKE_CONVERSATION": {
+        "NAME": "I'll take this one",
+        "DESCRIPTION": "Assigns the conversation to whoever clicks it and sets a normal priority. Needs nothing set up first."
+      },
+      "RESOLVE_WITH_REASON": {
+        "NAME": "Resolve with a reason",
+        "DESCRIPTION": "Labels the conversation with the reason it was closed, then resolves it, so the resolved queue can be read later."
+      },
+      "HAND_TO_TEAM": {
+        "NAME": "Hand to a team",
+        "DESCRIPTION": "Moves the conversation to a team, clears the current assignee, and leaves a note with the context."
+      },
+      "WAITING_ON_CUSTOMER": {
+        "NAME": "Waiting on the customer",
+        "DESCRIPTION": "Labels the conversation and snoozes it, so it comes back instead of sitting in the open queue."
+      },
+      "STORE_ISSUE_HANDOFF": {
+        "NAME": "Send a store question to the right team",
+        "DESCRIPTION": "Labels an order or store question, raises its priority and routes it to the team that can open the store. A macro cannot read or change an order itself."
+      }
+    },
+    "SETUP": {
+      "TITLE": "Set up more than one thing at once",
+      "PROVENANCE": "Created from the {name} setup recipe (version {version}).",
+      "PARTIAL": "Only part of this was created: {created}. Nothing else was changed — finish the rest yourself, or delete it and try again.",
+      "OBJECTS": {
+        "AUDIENCE": "the shared audience",
+        "RULE": "the automation rule"
+      },
+      "SPEND_AUDIENCE_ROUTING": {
+        "NAME": "Your best customers reach a dedicated team",
+        "DESCRIPTION": "Creates two things: a shared audience of the customers who have spent more than you say, and a rule that sends their conversations to a team at the priority you choose. Both stay yours to edit, and the rule arrives switched off.",
+        "AUDIENCE_NAME": "High-value customers",
+        "RULE_NAME": "High-value customers reach a dedicated team"
+      }
+    }
+  }
+}

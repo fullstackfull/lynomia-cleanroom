@@ -1,0 +1,8 @@
+title: error
+type: object
+description: >
+  The error body this API returns. A write that fails validation returns `validation_error` instead.
+properties:
+  error:
+    type: string
+    description: What went wrong

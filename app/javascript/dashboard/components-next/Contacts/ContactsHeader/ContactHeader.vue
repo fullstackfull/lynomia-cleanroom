@@ -1,0 +1,165 @@
+<script setup>
+import Button from 'dashboard/components-next/button/Button.vue';
+import Input from 'dashboard/components-next/input/Input.vue';
+import Icon from 'dashboard/components-next/icon/Icon.vue';
+import ContactSortMenu from './components/ContactSortMenu.vue';
+import ContactMoreActions from './components/ContactMoreActions.vue';
+import ComposeConversation from 'dashboard/components-next/NewConversation/ComposeConversation.vue';
+
+defineProps({
+  showSearch: { type: Boolean, default: true },
+  searchValue: { type: String, default: '' },
+  headerTitle: { type: String, required: true },
+  buttonLabel: { type: String, default: '' },
+  activeSort: { type: String, default: 'last_activity_at' },
+  activeOrdering: { type: String, default: '' },
+  isSegmentsView: { type: Boolean, default: false },
+  hasActiveFilters: { type: Boolean, default: false },
+  isLabelView: { type: Boolean, default: false },
+  isActiveView: { type: Boolean, default: false },
+  canManageSegment: { type: Boolean, default: true },
+  // The audience being viewed, passed through to the overflow menu where its actions live.
+  activeSegment: { type: Object, default: null },
+  // The label the list is filtered by, passed through for the same reason.
+  activeLabel: { type: Object, default: null },
+});
+
+const emit = defineEmits([
+  'search',
+  'filter',
+  'update:sort',
+  'add',
+  'import',
+  'export',
+  'createSegment',
+  'deleteSegment',
+  'duplicateSegment',
+  'useInAutomation',
+  'useInCampaign',
+  'copySegmentLink',
+  'audiencePreset',
+]);
+</script>
+
+<template>
+  <header class="sticky top-0 z-20 px-6">
+    <div
+      class="flex items-start sm:items-center justify-between w-full py-6 gap-2 mx-auto max-w-5xl"
+    >
+      <span class="text-xl font-medium truncate text-n-slate-12">
+        {{ headerTitle }}
+      </span>
+      <div class="flex items-center flex-col sm:flex-row flex-shrink-0 gap-4">
+        <div v-if="showSearch" class="flex items-center gap-2 w-full">
+          <Input
+            :model-value="searchValue"
+            type="search"
+            :placeholder="$t('CONTACTS_LAYOUT.HEADER.SEARCH_PLACEHOLDER')"
+            :custom-input-class="[
+              'h-8 [&:not(.focus)]:!border-transparent bg-n-alpha-2 dark:bg-n-solid-1 !ps-8 !py-1',
+            ]"
+            class="w-full"
+            @input="emit('search', $event.target.value)"
+          >
+            <template #prefix>
+              <Icon
+                icon="i-lucide-search"
+                class="absolute -translate-y-1/2 text-n-slate-11 size-4 top-1/2 start-2"
+              />
+            </template>
+          </Input>
+        </div>
+        <div class="flex items-center flex-shrink-0 gap-4">
+          <div class="flex items-center gap-2">
+            <!-- Below sm the filter panel anchors to the header, so it spans the screen instead of the button. -->
+            <div v-if="!isLabelView && !isActiveView" class="sm:relative">
+              <Button
+                id="toggleContactsFilterButton"
+                :icon="
+                  isSegmentsView ? 'i-lucide-pen-line' : 'i-lucide-list-filter'
+                "
+                :aria-label="
+                  isSegmentsView
+                    ? $t('CONTACTS_LAYOUT.FILTER.EDIT_SEGMENT')
+                    : $t('CONTACTS_LAYOUT.HEADER.ACTIONS.BUTTONS.FILTER')
+                "
+                color="slate"
+                size="sm"
+                class="relative w-8"
+                variant="ghost"
+                @click="emit('filter')"
+              >
+                <div
+                  v-if="hasActiveFilters && !isSegmentsView"
+                  class="absolute top-0 end-0 size-2 rounded-full bg-n-brand"
+                />
+              </Button>
+              <slot name="filter" />
+            </div>
+            <!-- Saving the current filter as an audience was a bare save icon whose only text was an aria-label,
+            so the one way to create an audience by hand was unreadable. It says what it does now, and the
+            visible text is its accessible name. -->
+            <Button
+              v-if="
+                hasActiveFilters &&
+                !isSegmentsView &&
+                !isLabelView &&
+                !isActiveView
+              "
+              icon="i-lucide-save"
+              :label="
+                $t(
+                  'CONTACTS_LAYOUT.HEADER.ACTIONS.FILTERS.CREATE_SEGMENT.ACTION'
+                )
+              "
+              color="slate"
+              size="sm"
+              variant="faded"
+              data-test-id="save-as-audience"
+              @click="emit('createSegment')"
+            />
+            <Button
+              v-if="
+                isSegmentsView &&
+                canManageSegment &&
+                !isLabelView &&
+                !isActiveView
+              "
+              icon="i-lucide-trash"
+              :aria-label="
+                $t('CONTACTS_LAYOUT.HEADER.ACTIONS.BUTTONS.DELETE_SEGMENT')
+              "
+              color="ruby"
+              size="sm"
+              variant="ghost"
+              @click="emit('deleteSegment')"
+            />
+            <ContactSortMenu
+              :active-sort="activeSort"
+              :active-ordering="activeOrdering"
+              @update:sort="emit('update:sort', $event)"
+            />
+            <ContactMoreActions
+              :segment="activeSegment"
+              :active-label="activeLabel"
+              @add="emit('add')"
+              @import="emit('import')"
+              @export="emit('export')"
+              @duplicate-segment="emit('duplicateSegment')"
+              @use-in-automation="emit('useInAutomation')"
+              @use-in-campaign="emit('useInCampaign')"
+              @copy-segment-link="emit('copySegmentLink')"
+              @audience-preset="emit('audiencePreset')"
+            />
+          </div>
+          <div class="w-px h-4 bg-n-strong" />
+          <ComposeConversation>
+            <template #trigger>
+              <Button :label="buttonLabel" size="sm" />
+            </template>
+          </ComposeConversation>
+        </div>
+      </div>
+    </div>
+  </header>
+</template>
