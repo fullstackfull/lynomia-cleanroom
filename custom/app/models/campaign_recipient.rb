@@ -71,7 +71,14 @@ class CampaignRecipient < ApplicationRecord
   # when it is further along than where the record already is. Those two rules together are the ladder: a `read`
   # report arriving before `delivered` leaves `delivered_at` null and the state at read, and the late
   # `delivered` report then backfills the timestamp without demoting the state.
+  #
+  # A failure is terminal, so nothing is stamped over one. Without that, a `delivered` report racing a `failed`
+  # report could leave a row carrying both timestamps -- and the analytics read the two independently, so that
+  # one row would be counted once as delivered and once as failed, and the interface's breakdown would add up
+  # to more recipients than the campaign had.
   def progress_changes(reported, reported_at)
+    return {} if failed?
+
     column = REPORTED_AT_COLUMN.fetch(reported)
     changes = {}
     changes[column] = reported_at || Time.current if public_send(column).blank?

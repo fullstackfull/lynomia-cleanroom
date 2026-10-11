@@ -11,30 +11,32 @@
 #     store that rejects it leaves the surrounding transaction usable and the action still commits;
 #   * the failure is reported where operators look, and never to the end user.
 #
-# The actor is read from the request context, never accepted as an argument that a caller could forge. The
-# originating address and the request id are left to the record itself, which reads them from the same store
-# the `audited` macro's rows read them from -- one mechanism, so a hand-written event and a declared one cannot
-# disagree about where the request came from.
+# The actor is never a parameter. Package B §5: "The actor is recorded, not asserted. It comes from the
+# authenticated request context, never from a parameter the caller supplies." So it, the originating address
+# and the request id are all left to the record, which reads them from the same store the `audited` macro's
+# rows read them from -- one mechanism, so a hand-written event and a declared one cannot disagree about who
+# acted or where the request came from. A caller that knows the actor and is outside a request, as sign-out is,
+# says so by wrapping the call in `Custom::AuditLog.as_user`.
 module AuditTrail::Event
   # `action` is the verb the browser builds its label from, as `<auditable_type>:<action>` lower-cased
   # (app/javascript/dashboard/helper/auditlogHelper.js). It is therefore the frontend's vocabulary, not the
   # gem's: `sign_in` and `sign_out` are as legitimate here as `create` and `destroy`.
-  def self.record(action:, auditable:, account:, user: Current.user, comment: nil, changes: {})
+  def self.record(action:, auditable:, account:, comment: nil, changes: {})
     return if account.blank?
 
     write(
-      auditable: auditable, associated: account, user: user, action: action.to_s,
+      auditable: auditable, associated: account, action: action.to_s,
       comment: comment, audited_changes: changes.deep_stringify_keys
     )
   end
 
   # `auditable_type` and `auditable_id` instead of the record itself, for the one caller whose subject is already
   # gone by the time the event can be described: the row has to name what was deleted without holding it.
-  def self.record_removal(auditable_type:, auditable_id:, account:, user: Current.user, comment: nil, changes: {})
+  def self.record_removal(auditable_type:, auditable_id:, account:, comment: nil, changes: {})
     return if account.blank?
 
     write(
-      auditable_type: auditable_type, auditable_id: auditable_id, associated: account, user: user,
+      auditable_type: auditable_type, auditable_id: auditable_id, associated: account,
       action: 'destroy', comment: comment, audited_changes: changes.deep_stringify_keys
     )
   end

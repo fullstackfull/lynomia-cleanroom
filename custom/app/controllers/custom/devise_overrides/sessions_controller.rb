@@ -40,10 +40,15 @@ module Custom::DeviseOverrides::SessionsController
     membership = session_account_user(user)
     return if membership.blank?
 
-    AuditTrail::Event.record(
-      action: action, auditable: user, account: membership.account, user: user,
-      comment: "user.#{action}", changes: { account_id: membership.account_id }
-    )
+    # `as_user`, because this is the one capture point whose actor the request context does not hold: the
+    # devise controllers are skipped by `set_current_user`, and by the time a sign-out renders, upstream has
+    # already removed the resource.
+    Custom::AuditLog.as_user(user) do
+      AuditTrail::Event.record(
+        action: action, auditable: user, account: membership.account,
+        comment: "user.#{action}", changes: { account_id: membership.account_id }
+      )
+    end
   end
 
   def session_account_user(user)

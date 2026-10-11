@@ -35,10 +35,19 @@ class CustomRole < ApplicationRecord
 
   belongs_to :account
 
-  # Nullify, never destroy. Deleting a role must lose no membership: each affected member simply has no role
+  # Detached, never destroyed. Deleting a role must lose no membership: each affected member simply has no role
   # afterwards and reverts to the capabilities its built-in role gives it (package C §6). There is no foreign
-  # key on `account_users.custom_role_id`, so this association is the only thing that clears the attachment.
-  has_many :account_users, dependent: :nullify
+  # key on `account_users.custom_role_id`, so clearing the attachment is this model's job.
+  #
+  # `dependent: :nullify` would do it in one `update_all` -- and skip every callback on the way. Chatwoot
+  # declares `custom_role_id` to be a column that changes which conversations a member can see, and invalidates
+  # their cached filtered unread counts whenever it moves (app/models/account_user.rb:85-87,93-95). Through
+  # `update_all` that invalidation never runs, so deleting a set would leave its holders counting conversations
+  # under the visibility it used to grant -- while the identical change made on the agent endpoint invalidates
+  # correctly. One statement per holder keeps the two paths honest, and it puts the capability change on the
+  # audit trail, which is where a reader looks for why somebody's access changed.
+  has_many :account_users, dependent: nil
+  before_destroy :detach_memberships
 
   validates :name, presence: true
   # The client requires at least one capability before it will submit (CustomRoleModal.vue:48), and a set that
@@ -47,6 +56,10 @@ class CustomRole < ApplicationRecord
   validate :permissions_are_published
 
   private
+
+  def detach_memberships
+    account_users.each { |membership| membership.update!(custom_role_id: nil) }
+  end
 
   # Reported as one error naming every unknown value, so a client sending two typos learns about both.
   def permissions_are_published
