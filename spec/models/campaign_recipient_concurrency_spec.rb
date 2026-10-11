@@ -5,7 +5,7 @@ require 'rails_helper'
 # This is the one scenario the rest of the suite cannot express. Transactional fixtures put every example on a
 # single connection inside a single transaction, where two threads cannot contend for a row lock at all: the
 # second would either see the first's uncommitted write or block for ever. So this file opts out of them, uses a
-# connection per thread, and cleans up after itself.
+# connection per thread, and removes what it commits.
 #
 # What it proves is that the outcome is decided by the forward-only rule rather than by commit order. Without
 # `with_lock` in CampaignRecipient#record_outcome! both threads would read `sent`, both would consider their own
@@ -14,18 +14,68 @@ require 'rails_helper'
 RSpec.describe CampaignRecipient, type: :model do
   self.use_transactional_tests = false
 
-  # Each round gets its own account so a leftover row from a failed round cannot affect the next.
   let(:reported_at) { Time.zone.at(1_760_000_000) }
 
+  # One committed account graph per example, shared by every round in it. A round then costs a contact and a
+  # recipient rather than a whole account, and there is one graph to take down at the end instead of twenty.
+  let(:account) { Account.create!(name: "concurrency-#{SecureRandom.hex(4)}") }
+  let(:inbox) do
+    Inbox.create!(account: account, name: 'concurrency',
+                  channel: Channel::WebWidget.create!(account: account, website_url: 'https://concurrency.example'))
+  end
+  let(:campaign) do
+    Campaign.create!(account: account, inbox: inbox, title: 'c', message: 'c', campaign_type: :one_off,
+                     scheduled_at: 1.hour.ago)
+  end
+
+  # Nothing here is rolled back, so this file has to remove what it commits -- and a leak in a non-transactional
+  # file is not its own problem, it is every later file's. `WorkingHour.today` is not scoped to an inbox and
+  # several specs assert on `Contact.count`, so rows left behind here fail files that never heard of campaigns.
+  #
+  # Deleted directly, children first, and with `delete_all`: a teardown removes rows, it does not exercise
+  # cascade behaviour. `Account`'s own cascade is `dependent: :destroy_async`, which deletes the account first
+  # and leaves the children to a job -- and `Contact`'s destroy callbacks read `contact.account`, which by then
+  # is gone. Running product callbacks is not a teardown's business anyway.
+  #
+  # The audit rows the inbox's create writes are deliberately outside any cascade: `audits` carries no foreign
+  # key to `accounts`, because a trail has to outlive what it describes. This file removes its own, since it is
+  # not here to test the trail.
+  #
+  # Then the guard that would have caught this file leaking in the first place: every table that has an
+  # `account_id` is asked whether anything still points at the account this example made. It names the table
+  # rather than reporting a count that drifted, and it needs nothing carried between hooks.
+  after do
+    described_class.where(account_id: account.id).delete_all
+    Contact.where(account_id: account.id).delete_all
+    Campaign.where(account_id: account.id).delete_all
+    WorkingHour.where(account_id: account.id).delete_all
+    Inbox.where(account_id: account.id).delete_all
+    Channel::WebWidget.where(account_id: account.id).delete_all
+    Custom::AuditLog.where(associated_type: 'Account', associated_id: account.id).delete_all
+    Account.where(id: account.id).delete_all
+
+    leaked = tables_still_referencing(account.id)
+    raise "campaign_recipient_concurrency_spec left rows behind: #{leaked.join(', ')}" if leaked.any?
+  end
+
+  def tables_still_referencing(account_id)
+    connection = ActiveRecord::Base.connection
+    connection.tables.filter_map do |table|
+      next unless connection.columns(table).any? { |column| column.name == 'account_id' }
+
+      count = connection.select_value(
+        "SELECT COUNT(*) FROM #{connection.quote_table_name(table)} WHERE account_id = #{connection.quote(account_id)}"
+      )
+      "#{table} (#{count})" if count.positive?
+    end
+  end
+
+  # Named after this file, so that a row which somehow still outlives it says where it came from.
   def build_recipient
-    account = Account.create!(name: "concurrency-#{SecureRandom.hex(4)}")
-    channel = Channel::WebWidget.create!(account: account, website_url: 'https://concurrency.example')
-    inbox = Inbox.create!(account: account, name: 'concurrency', channel: channel)
-    campaign = Campaign.create!(account: account, inbox: inbox, title: 'c', message: 'c',
-                                campaign_type: :one_off, scheduled_at: 1.hour.ago)
     described_class.create!(
-      account: account, campaign: campaign, inbox: inbox, contact: Contact.create!(account: account, name: 'c'),
-      status: :sent, sent_at: reported_at, source_id: "wamid.concurrency-#{SecureRandom.hex(4)}"
+      account: account, campaign: campaign, inbox: inbox, status: :sent, sent_at: reported_at,
+      contact: Contact.create!(account: account, name: "concurrency-#{SecureRandom.hex(4)}"),
+      source_id: "wamid.concurrency-#{SecureRandom.hex(4)}"
     )
   end
 
@@ -39,10 +89,6 @@ RSpec.describe CampaignRecipient, type: :model do
         end
       end
     end.each(&:join)
-  end
-
-  after do
-    Account.where("name LIKE 'concurrency-%'").find_each(&:destroy!)
   end
 
   # Ten rounds in each order. One round can pass by luck; a demotion that only happens when the threads
